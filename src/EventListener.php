@@ -28,9 +28,13 @@ class EventListener implements Listener {
 
         $serverType = $this->plugin->getServerType();
         $survival = $this->plugin->getSurvival();
+        $hub = $this->plugin->getHub();
 
         if ($serverType === "survival" && $survival !== null) {
             $survival->onPlayerJoined($player);
+        }
+        if ($serverType === "hub" && $hub !== null) {
+            $hub->onPlayerJoined($player);
         }
     }
 

@@ -54,12 +54,14 @@ class Main extends PluginBase implements Listener {
         if ($this->servertype === "survival") {
             $this->survival = new Survival($this);
             $this->survival->setBossBarManager($this->bossBarManager);
+            $this->blockTickingDisabled = false;
             $this->survival->enable();
         }
         // Load hub logic if server type is survival
         if ($this->servertype === "hub") {
             $this->hub = new Hub($this);
             $this->hub->setBossBarManager($this->bossBarManager);
+            $this->blockTickingDisabled = true;
             $this->hub->enable();
         }
 
@@ -68,6 +70,10 @@ class Main extends PluginBase implements Listener {
 
     public function getSurvival(): ?Survival {
         return $this->survival ?? null;
+    }
+
+    public function getHub(): ?Hub {
+        return $this->hub ?? null;
     }
 
     public function getServerType(): string {
