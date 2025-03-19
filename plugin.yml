@@ -1,0 +1,31 @@
+---
+name: chocbar
+version: 0.0.1
+main: ckgcam\chocbar\Main
+api: 5.25.2
+depend: [FormAPI]
+src-namespace-prefix: ckgcam\chocbar
+commands:
+  tpworld:
+    description: "Teleport between worlds"
+    usage: "/tpworld <worldname>"
+    permission: chocbar.tpworld
+  admin:
+    description: "Opens the admin menu"
+    usage: "/admin"
+    permission: chocbar.admin
+  menu:
+    description: "Opens the gamemode menu"
+    usage: "/menu"
+    permission: chocbar.menu
+permissions:
+  chocbar.tpworld:
+    description: "Allows teleportation between worlds"
+    default: op
+  chocbar.admin:
+    description: "Allow user to use admin settings"
+    default: op
+  chocbar.menu:
+    description: "Opens Your Menu"
+    default: true
+...

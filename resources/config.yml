@@ -1,0 +1,49 @@
+welcome-message: "Welcome to the server, {PLAYER}!"
+
+server-type: "survival"
+
+hotbar:
+  hub:
+    items:
+      slot0: "navi"
+      slot1: "air"
+      slot2: "air"
+      slot3: "air"
+      slot4: "air"
+      slot5: "air"
+      slot6: "air"
+      slot7: "air"
+      slot8: "air"
+    names:
+      slot0: "Navi"
+      slot1: ""
+      slot2: ""
+      slot3: ""
+      slot4: ""
+      slot5: ""
+      slot6: ""
+      slot7: ""
+      slot8: ""
+    actions:
+      slot0: "openNaviForm"
+      slot1: ""
+      slot2: ""
+      slot3: ""
+      slot4: ""
+      slot5: ""
+      slot6: ""
+      slot7: ""
+      slot8: ""
+  other:
+    items:
+      slot0: "cobblestone"
+      slot1: "air"
+      slot2: "air"
+      slot3: "air"
+      slot4: "air"
+      slot5: "air"
+      slot6: "air"
+      slot7: "air"
+      slot8: "air"
+
+
