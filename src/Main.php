@@ -17,6 +17,7 @@ use ckgcam\chocbar\world\WorldManager;
 use ckgcam\chocbar\survival\Survival;
 use ckgcam\chocbar\bossbar\BossBarManager;
 use ckgcam\chocbar\EventListener;
+use ckgcam\chocbar\hub\Hub;
 
 class Main extends PluginBase implements Listener {
 
@@ -26,7 +27,10 @@ class Main extends PluginBase implements Listener {
     private BossBarManager $bossBarManager;
     private WorldManager $worldManager;
     private Survival $survival;
+    private Hub $hub;
     private string $servertype;
+
+    private bool $blockTickingDisabled = false;
 
     public function onEnable(): void {
         $this->saveDefaultConfig();
@@ -52,6 +56,12 @@ class Main extends PluginBase implements Listener {
             $this->survival->setBossBarManager($this->bossBarManager);
             $this->survival->enable();
         }
+        // Load hub logic if server type is survival
+        if ($this->servertype === "hub") {
+            $this->hub = new Hub($this);
+            $this->hub->setBossBarManager($this->bossBarManager);
+            $this->hub->enable();
+        }
 
         $this->getLogger()->info(TextFormat::GREEN . "chocbar lib loaded!");
     }
@@ -62,6 +72,10 @@ class Main extends PluginBase implements Listener {
 
     public function getServerType(): string {
         return $this->servertype;
+    }
+
+    public function isBlockTickingDisabled(): bool {
+        return $this->blockTickingDisabled;
     }
 
     public function onDisable(): void {

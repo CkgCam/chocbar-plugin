@@ -7,6 +7,10 @@ namespace ckgcam\chocbar;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\player\Player;
+use pocketmine\event\block\BlockUpdateEvent;
+use pocketmine\event\block\BlockSpreadEvent;
+use pocketmine\event\block\LeavesDecayEvent;
+use pocketmine\event\block\BlockBurnEvent;
 
 class EventListener implements Listener {
 
@@ -27,6 +31,30 @@ class EventListener implements Listener {
 
         if ($serverType === "survival" && $survival !== null) {
             $survival->onPlayerJoined($player);
+        }
+    }
+
+    public function onBlockUpdate(BlockUpdateEvent $event): void {
+        if ($this->plugin->isBlockTickingDisabled()) {
+            $event->cancel();
+        }
+    }
+
+    public function onBlockSpread(BlockSpreadEvent $event): void {
+        if ($this->plugin->isBlockTickingDisabled()) {
+            $event->cancel();
+        }
+    }
+
+    public function onLeavesDecay(LeavesDecayEvent $event): void {
+        if ($this->plugin->isBlockTickingDisabled()) {
+            $event->cancel();
+        }
+    }
+
+    public function onBlockBurn(BlockBurnEvent $event): void {
+        if ($this->plugin->isBlockTickingDisabled()) {
+            $event->cancel();
         }
     }
 }
