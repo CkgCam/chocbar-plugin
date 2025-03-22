@@ -94,7 +94,6 @@ class EventListener implements Listener {
         $player = $event->getPlayer();
         if (!$player->hasPermission("chocbar.build")) {
             $event->cancel();
-            $player->sendMessage("You don't have permission to break blocks here.");
         }
     }
 
@@ -102,7 +101,6 @@ class EventListener implements Listener {
         $player = $event->getPlayer();
         if (!$player->hasPermission("chocbar.build")) {
             $event->cancel();
-            $player->sendMessage("You don't have permission to place blocks here.");
         }
     }
 
