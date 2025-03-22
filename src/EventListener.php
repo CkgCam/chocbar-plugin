@@ -12,10 +12,15 @@ use pocketmine\event\block\{
     LeavesDecayEvent,
     BlockBurnEvent,
     BlockGrowEvent,
-    BlockFormEvent
+    BlockFormEvent,
+    BlockBreakEvent,
+    BlockPlaceEvent
 };
-use pocketmine\block\Farmland;
+use pocketmine\event\entity\EntityPreExplodeEvent;
+use pocketmine\block\{Farmland, Lava, Water, VanillaBlocks};
 use pocketmine\player\Player;
+use pocketmine\world\Position;
+use pocketmine\Server;
 
 class EventListener implements Listener {
 
@@ -49,14 +54,14 @@ class EventListener implements Listener {
             return;
         }
 
-        // Explicitly stop farmland hydration checks to prevent reverting
         if ($event->getBlock() instanceof Farmland) {
             $event->cancel();
         }
     }
 
     public function onBlockSpread(BlockSpreadEvent $event): void {
-        if ($this->plugin->isBlockTickingDisabled()) {
+        $source = $event->getSource();
+        if ($this->plugin->isBlockTickingDisabled() || $source instanceof Lava || $source instanceof Water) {
             $event->cancel();
         }
     }
@@ -82,6 +87,30 @@ class EventListener implements Listener {
     public function onBlockForm(BlockFormEvent $event): void {
         if ($this->plugin->isBlockTickingDisabled()) {
             $event->cancel();
+        }
+    }
+
+    public function onBlockBreak(BlockBreakEvent $event): void {
+        $player = $event->getPlayer();
+        if (!$player->hasPermission("chocbar.build")) {
+            $event->cancel();
+            $player->sendMessage("You don't have permission to break blocks here.");
+        }
+    }
+
+    public function onBlockPlace(BlockPlaceEvent $event): void {
+        $player = $event->getPlayer();
+        if (!$player->hasPermission("chocbar.build")) {
+            $event->cancel();
+            $player->sendMessage("You don't have permission to place blocks here.");
+        }
+    }
+
+    public function onEntityPreExplode(EntityPreExplodeEvent $event): void {
+        $event->setBlockBreaking(false);
+        $entity = $event->getEntity();
+        if ($entity !== null) {
+            $entity->close();
         }
     }
 }
