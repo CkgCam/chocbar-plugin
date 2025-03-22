@@ -6,11 +6,17 @@ namespace ckgcam\chocbar;
 
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\block\{
+    BlockUpdateEvent,
+    BlockSpreadEvent,
+    LeavesDecayEvent,
+    BlockBurnEvent,
+    BlockGrowEvent,
+    BlockFormEvent,
+    BlockFadeEvent,
+    BlockPhysicsEvent
+};
 use pocketmine\player\Player;
-use pocketmine\event\block\BlockUpdateEvent;
-use pocketmine\event\block\BlockSpreadEvent;
-use pocketmine\event\block\LeavesDecayEvent;
-use pocketmine\event\block\BlockBurnEvent;
 
 class EventListener implements Listener {
 
@@ -38,25 +44,57 @@ class EventListener implements Listener {
         }
     }
 
+    // Stops general block updates (redstone, gravity blocks, liquids, etc.)
     public function onBlockUpdate(BlockUpdateEvent $event): void {
         if ($this->plugin->isBlockTickingDisabled()) {
             $event->cancel();
         }
     }
 
+    // Stops spreading of blocks like grass, fire, and mushrooms
     public function onBlockSpread(BlockSpreadEvent $event): void {
         if ($this->plugin->isBlockTickingDisabled()) {
             $event->cancel();
         }
     }
 
+    // Stops leaves from decaying
     public function onLeavesDecay(LeavesDecayEvent $event): void {
         if ($this->plugin->isBlockTickingDisabled()) {
             $event->cancel();
         }
     }
 
+    // Stops blocks from burning away
     public function onBlockBurn(BlockBurnEvent $event): void {
+        if ($this->plugin->isBlockTickingDisabled()) {
+            $event->cancel();
+        }
+    }
+
+    // Stops crop and sapling growth
+    public function onBlockGrow(BlockGrowEvent $event): void {
+        if ($this->plugin->isBlockTickingDisabled()) {
+            $event->cancel();
+        }
+    }
+
+    // Stops blocks forming (ice, snow, obsidian, etc.)
+    public function onBlockForm(BlockFormEvent $event): void {
+        if ($this->plugin->isBlockTickingDisabled()) {
+            $event->cancel();
+        }
+    }
+
+    // Stops blocks from fading away (e.g., ice melting, coral dying)
+    public function onBlockFade(BlockFadeEvent $event): void {
+        if ($this->plugin->isBlockTickingDisabled()) {
+            $event->cancel();
+        }
+    }
+
+    // Stops physics updates (gravity, sand/gravel falling, liquids flowing)
+    public function onBlockPhysics(BlockPhysicsEvent $event): void {
         if ($this->plugin->isBlockTickingDisabled()) {
             $event->cancel();
         }
