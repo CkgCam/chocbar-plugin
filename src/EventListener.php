@@ -12,8 +12,7 @@ use pocketmine\event\block\{
     LeavesDecayEvent,
     BlockBurnEvent,
     BlockGrowEvent,
-    BlockFormEvent,
-    BlockPhysicsEvent
+    BlockFormEvent
 };
 use pocketmine\player\Player;
 
@@ -74,12 +73,6 @@ class EventListener implements Listener {
     }
 
     public function onBlockForm(BlockFormEvent $event): void {
-        if ($this->plugin->isBlockTickingDisabled()) {
-            $event->cancel();
-        }
-    }
-
-    public function onBlockPhysics(BlockPhysicsEvent $event): void {
         if ($this->plugin->isBlockTickingDisabled()) {
             $event->cancel();
         }
