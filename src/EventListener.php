@@ -14,6 +14,7 @@ use pocketmine\event\block\{
     BlockGrowEvent,
     BlockFormEvent
 };
+use pocketmine\block\VanillaBlocks;
 use pocketmine\player\Player;
 
 class EventListener implements Listener {
@@ -44,6 +45,12 @@ class EventListener implements Listener {
 
     public function onBlockUpdate(BlockUpdateEvent $event): void {
         if ($this->plugin->isBlockTickingDisabled()) {
+            $event->cancel();
+            return;
+        }
+
+        // Prevent farmland (hoed dirt) from reverting
+        if ($event->getBlock()->getTypeId() === VanillaBlocks::FARMLAND()->getTypeId()) {
             $event->cancel();
         }
     }
