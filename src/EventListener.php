@@ -14,7 +14,7 @@ use pocketmine\event\block\{
     BlockGrowEvent,
     BlockFormEvent
 };
-use pocketmine\block\VanillaBlocks;
+use pocketmine\block\Farmland;
 use pocketmine\player\Player;
 
 class EventListener implements Listener {
@@ -49,8 +49,8 @@ class EventListener implements Listener {
             return;
         }
 
-        // Prevent farmland (hoed dirt) from reverting
-        if ($event->getBlock()->getTypeId() === VanillaBlocks::FARMLAND()->getTypeId()) {
+        // Explicitly stop farmland hydration checks to prevent reverting
+        if ($event->getBlock() instanceof Farmland) {
             $event->cancel();
         }
     }
