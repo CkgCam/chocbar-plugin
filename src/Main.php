@@ -6,9 +6,9 @@ namespace ckgcam\chocbar;
 
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
-use pocketmine\event\Listener;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 use ckgcam\chocbar\HotbarMenu\HotbarMenuManager;
 use ckgcam\chocbar\HotbarMenu\InventoryListener;
@@ -19,15 +19,14 @@ use ckgcam\chocbar\bossbar\BossBarManager;
 use ckgcam\chocbar\EventListener;
 use ckgcam\chocbar\hub\Hub;
 
-class Main extends PluginBase implements Listener {
+class Main extends PluginBase {
 
-    private Config $config;
     private HotbarMenuManager $hotbarManager;
     private FormsManager $formsManager;
     private BossBarManager $bossBarManager;
     private WorldManager $worldManager;
-    private Survival $survival;
-    private Hub $hub;
+    private ?Survival $survival = null;
+    private ?Hub $hub = null;
     private string $servertype;
 
     private bool $blockTickingDisabled = false;
@@ -35,7 +34,6 @@ class Main extends PluginBase implements Listener {
     public function onEnable(): void {
         $this->saveDefaultConfig();
         $this->servertype = strtolower($this->getConfig()->get("server-type"));
-
 
         // Register event listeners
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
@@ -57,7 +55,8 @@ class Main extends PluginBase implements Listener {
             $this->blockTickingDisabled = false;
             $this->survival->enable();
         }
-        // Load hub logic if server type is survival
+
+        // Load hub logic if server type is hub
         if ($this->servertype === "hub") {
             $this->hub = new Hub($this);
             $this->hub->setBossBarManager($this->bossBarManager);
@@ -69,11 +68,11 @@ class Main extends PluginBase implements Listener {
     }
 
     public function getSurvival(): ?Survival {
-        return $this->survival ?? null;
+        return $this->survival;
     }
 
     public function getHub(): ?Hub {
-        return $this->hub ?? null;
+        return $this->hub;
     }
 
     public function getServerType(): string {
@@ -92,7 +91,7 @@ class Main extends PluginBase implements Listener {
         return $this->hotbarManager;
     }
 
-    public function executeHotbarActions(Player $player, string $ID) {
+    public function executeHotbarActions(Player $player, string $ID): void {
         switch ($ID) {
             case "openNaviForm":
                 $this->formsManager->openNaviForm($player);
