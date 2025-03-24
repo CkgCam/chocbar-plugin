@@ -94,7 +94,6 @@ class EventListener implements Listener {
             $event->cancel(); // Prevent dirt conversion
         }
     }
-}
 
 public function onEntityTrampleFarmland(EntityTrampleFarmlandEvent $event): void {
     if ($this->plugin->isBlockTickingDisabled()) {
