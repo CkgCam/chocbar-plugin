@@ -112,17 +112,28 @@ class EventListener implements Listener {
 
     public function onBlockPlace(BlockPlaceEvent $event): void {
         $player = $event->getPlayer();
+
+        // Safety check: Make sure there’s at least one block being placed
+        $blocks = $event->getTransaction()->getBlocks();
+        if (count($blocks) === 0) {
+            $player->sendMessage("§c[Debug] No blocks detected in transaction.");
+            return;
+        }
+
         if (!$this->plugin->getServer()->isOp($player->getName())) {
             $event->cancel();
+            $player->sendMessage("§cYou're not allowed to place blocks.");
+        } else {
+            $player->sendMessage("§a[Debug] Block place allowed for OP.");
         }
     }
 
-    // Explosion Events
-    public function onEntityPreExplode(EntityPreExplodeEvent $event): void {
-        $event->setBlockBreaking(false);
-        $entity = $event->getEntity();
-        if ($entity !== null) {
-            $entity->close();
-        }
+// Explosion Events
+public function onEntityPreExplode(EntityPreExplodeEvent $event): void {
+    $event->setBlockBreaking(false);
+    $entity = $event->getEntity();
+    if ($entity !== null) {
+        $entity->close();
     }
+}
 }
