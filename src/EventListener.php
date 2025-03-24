@@ -14,13 +14,15 @@ use pocketmine\event\block\{
     BlockGrowEvent,
     BlockFormEvent,
     BlockBreakEvent,
-    BlockPlaceEvent
+    BlockPlaceEvent,
+    FarmlandHydrationChangeEvent
 };
-use pocketmine\event\entity\EntityPreExplodeEvent;
-use pocketmine\block\{Farmland, Lava, Water, VanillaBlocks};
+use pocketmine\event\entity\{
+    EntityPreExplodeEvent,
+    EntityTrampleFarmlandEvent
+};
+use pocketmine\block\{Farmland, Lava, Water};
 use pocketmine\player\Player;
-use pocketmine\world\Position;
-use pocketmine\Server;
 
 class EventListener implements Listener {
 
@@ -48,13 +50,9 @@ class EventListener implements Listener {
         }
     }
 
+    // Block Ticking Disabled Events
     public function onBlockUpdate(BlockUpdateEvent $event): void {
-        if ($this->plugin->isBlockTickingDisabled()) {
-            $event->cancel();
-            return;
-        }
-
-        if ($event->getBlock() instanceof Farmland) {
+        if ($this->plugin->isBlockTickingDisabled() || $event->getBlock() instanceof Farmland) {
             $event->cancel();
         }
     }
@@ -90,6 +88,22 @@ class EventListener implements Listener {
         }
     }
 
+    public function onFarmlandHydrationChange(FarmlandHydrationChangeEvent $event): void {
+        if ($this->plugin->isBlockTickingDisabled()) {
+            // You can either cancel or force hydration level
+            $event->cancel();
+            // Or: $event->setNewHydration(7); // Fully hydrated
+        }
+    }
+
+    public function onEntityTrampleFarmland(EntityTrampleFarmlandEvent $event): void {
+        if ($this->plugin->isBlockTickingDisabled()) {
+            // Cancel trampling so farmland doesn't turn into dirt
+            $event->cancel();
+        }
+    }
+
+    // Disable Building Events
     public function onBlockBreak(BlockBreakEvent $event): void {
         $player = $event->getPlayer();
         if (!$player->hasPermission("chocbar.build")) {
@@ -104,6 +118,7 @@ class EventListener implements Listener {
         }
     }
 
+    // Explosion Events
     public function onEntityPreExplode(EntityPreExplodeEvent $event): void {
         $event->setBlockBreaking(false);
         $entity = $event->getEntity();
