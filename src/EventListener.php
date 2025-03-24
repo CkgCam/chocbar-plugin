@@ -105,7 +105,7 @@ class EventListener implements Listener {
     // Disable Building Events
     public function onBlockBreak(BlockBreakEvent $event): void {
         $player = $event->getPlayer();
-        if (!\$player->isOp()) {
+        if (!$player->isOp()) {
             $event->cancel();
         }
     }
