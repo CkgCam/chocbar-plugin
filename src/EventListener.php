@@ -114,7 +114,8 @@ class EventListener implements Listener {
         $player = $event->getPlayer();
 
         // Safety check: Make sure there’s at least one block being placed
-        $blocks = $event->getTransaction()->getBlocks();
+        // Convert Generator to array so we can count it
+        $blocks = iterator_to_array($event->getTransaction()->getBlocks());
         if (count($blocks) === 0) {
             $player->sendMessage("§c[Debug] No blocks detected in transaction.");
             return;
