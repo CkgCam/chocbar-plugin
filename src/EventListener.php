@@ -94,6 +94,7 @@ class EventListener implements Listener {
             $event->cancel(); // Prevent dirt conversion
         }
     }
+}
 
 public function onEntityTrampleFarmland(EntityTrampleFarmlandEvent $event): void {
     if ($this->plugin->isBlockTickingDisabled()) {
@@ -105,10 +106,10 @@ public function onEntityTrampleFarmland(EntityTrampleFarmlandEvent $event): void
 // Disable Building Events
 public function onBlockBreak(BlockBreakEvent $event): void {
     $player = $event->getPlayer();
-    if (!$player->hasPermission("chocbar.build")) {
+    if (!\$player->isOp()) {
         $event->cancel();
     }
-}
+    }
 
 public function onBlockPlace(BlockPlaceEvent $event): void {
     $player = $event->getPlayer();
