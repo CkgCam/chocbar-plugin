@@ -94,36 +94,35 @@ class EventListener implements Listener {
             $event->cancel(); // Prevent dirt conversion
         }
     }
-}
 
-public function onEntityTrampleFarmland(EntityTrampleFarmlandEvent $event): void {
-    if ($this->plugin->isBlockTickingDisabled()) {
-        // Cancel trampling so farmland doesn't turn into dirt
-        $event->cancel();
-    }
-}
-
-// Disable Building Events
-public function onBlockBreak(BlockBreakEvent $event): void {
-    $player = $event->getPlayer();
-    if (!\$player->isOp()) {
-        $event->cancel();
-    }
+    public function onEntityTrampleFarmland(EntityTrampleFarmlandEvent $event): void {
+        if ($this->plugin->isBlockTickingDisabled()) {
+            // Cancel trampling so farmland doesn't turn into dirt
+            $event->cancel();
+        }
     }
 
-public function onBlockPlace(BlockPlaceEvent $event): void {
-    $player = $event->getPlayer();
-    if (!$player->hasPermission("chocbar.build")) {
-        $event->cancel();
+    // Disable Building Events
+    public function onBlockBreak(BlockBreakEvent $event): void {
+        $player = $event->getPlayer();
+        if (!\$player->isOp()) {
+            $event->cancel();
+        }
     }
-}
 
-// Explosion Events
-public function onEntityPreExplode(EntityPreExplodeEvent $event): void {
-    $event->setBlockBreaking(false);
-    $entity = $event->getEntity();
-    if ($entity !== null) {
-        $entity->close();
+    public function onBlockPlace(BlockPlaceEvent $event): void {
+        $player = $event->getPlayer();
+        if (!$player->hasPermission("chocbar.build")) {
+            $event->cancel();
+        }
     }
-}
+
+    // Explosion Events
+    public function onEntityPreExplode(EntityPreExplodeEvent $event): void {
+        $event->setBlockBreaking(false);
+        $entity = $event->getEntity();
+        if ($entity !== null) {
+            $entity->close();
+        }
+    }
 }
