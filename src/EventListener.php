@@ -90,40 +90,40 @@ class EventListener implements Listener {
 
     public function onFarmlandHydrationChange(FarmlandHydrationChangeEvent $event): void {
         if ($this->plugin->isBlockTickingDisabled()) {
-            // You can either cancel or force hydration level
-           // $event->cancel();
-            $event->setNewHydration(7); // Fully hydrated
+            $event->setNewHydration(7); // Force max hydration
+            $event->cancel(); // Prevent dirt conversion
         }
     }
+}
 
-    public function onEntityTrampleFarmland(EntityTrampleFarmlandEvent $event): void {
-        if ($this->plugin->isBlockTickingDisabled()) {
-            // Cancel trampling so farmland doesn't turn into dirt
-            $event->cancel();
-        }
+public function onEntityTrampleFarmland(EntityTrampleFarmlandEvent $event): void {
+    if ($this->plugin->isBlockTickingDisabled()) {
+        // Cancel trampling so farmland doesn't turn into dirt
+        $event->cancel();
     }
+}
 
-    // Disable Building Events
-    public function onBlockBreak(BlockBreakEvent $event): void {
-        $player = $event->getPlayer();
-        if (!$player->hasPermission("chocbar.build")) {
-            $event->cancel();
-        }
+// Disable Building Events
+public function onBlockBreak(BlockBreakEvent $event): void {
+    $player = $event->getPlayer();
+    if (!$player->hasPermission("chocbar.build")) {
+        $event->cancel();
     }
+}
 
-    public function onBlockPlace(BlockPlaceEvent $event): void {
-        $player = $event->getPlayer();
-        if (!$player->hasPermission("chocbar.build")) {
-            $event->cancel();
-        }
+public function onBlockPlace(BlockPlaceEvent $event): void {
+    $player = $event->getPlayer();
+    if (!$player->hasPermission("chocbar.build")) {
+        $event->cancel();
     }
+}
 
-    // Explosion Events
-    public function onEntityPreExplode(EntityPreExplodeEvent $event): void {
-        $event->setBlockBreaking(false);
-        $entity = $event->getEntity();
-        if ($entity !== null) {
-            $entity->close();
-        }
+// Explosion Events
+public function onEntityPreExplode(EntityPreExplodeEvent $event): void {
+    $event->setBlockBreaking(false);
+    $entity = $event->getEntity();
+    if ($entity !== null) {
+        $entity->close();
     }
+}
 }
