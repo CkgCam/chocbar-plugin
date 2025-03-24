@@ -112,7 +112,7 @@ class EventListener implements Listener {
 
     public function onBlockPlace(BlockPlaceEvent $event): void {
         $player = $event->getPlayer();
-        if (!$player->hasPermission("chocbar.build")) {
+        if (!$player->isOp()) {
             $event->cancel();
         }
     }
