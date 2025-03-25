@@ -57,7 +57,7 @@ class EventListener implements Listener {
     public function onBlockUpdate(BlockUpdateEvent $event): void {
         $block = $event->getBlock();
         if ($this->plugin->isBlockTickingDisabled() && $block instanceof Farmland) {
-            $event->cancel();
+            $block->getPosition()->getWorld()->setBlock($block->getPosition(), VanillaBlocks::FARMLAND());
         }
     }
 
