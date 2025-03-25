@@ -88,7 +88,7 @@ class EventListener implements Listener {
         }
     }
 
-    public function onFarmlandHydrationChange(FarmlandHydrationChangeEvent $event): void {
+    public function FarmlandHydrationChangeEvent(FarmlandHydrationChangeEvent $event): void {
         if ($this->plugin->isBlockTickingDisabled()) {
             $event->setNewHydration(7); // Force max hydration
             //$event->cancel();           // Prevent dirt conversion
