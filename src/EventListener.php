@@ -61,15 +61,14 @@ class EventListener implements Listener {
         if ($this->plugin->isBlockTickingDisabled() && $world instanceof World) {
             if ($block instanceof Farmland) {
                 $event->cancel(); // Stop the natural update
-                //$this->plugin->getLogger()->info("Preventing farmland update at " . $block->getPosition()->__toString());
+                $this->plugin->getLogger()->info("Preventing farmland update at " . $block->getPosition()->__toString());
             }
             elseif ($block instanceof Dirt) { // ✅ If it already turned into dirt, reset it
-               // $this->plugin->getLogger()->info("Restoring farmland at " . $block->getPosition()->__toString());
+                $this->plugin->getLogger()->info("Restoring farmland at " . $block->getPosition()->__toString());
                 $world->setBlock($block->getPosition(), VanillaBlocks::FARMLAND());
             }
         }
     }
-
 
 
     public function onBlockSpread(BlockSpreadEvent $event): void {
