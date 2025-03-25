@@ -54,14 +54,12 @@ class EventListener implements Listener {
     }
 
     // Block Ticking Disabled Events
-    public function onBlockUpdate(BlockUpdateEvent $event): void {
-    }
-
-    public function onFarmlandHydrationChange(FarmlandHydrationChangeEvent $event): void
+    public function onBlockUpdate(BlockUpdateEvent $event): void
     {
+        // If farmland updates are globally disabled
         if ($this->plugin->isBlockTickingDisabled()) {
-            $event->setNewHydration(7); // Force max hydration
-            //$event->cancel(); // Prevent dirt conversion
+            $event->cancel();
+            return;
         }
     }
         public function onBlockSpread(BlockSpreadEvent $event): void {
