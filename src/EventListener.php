@@ -55,20 +55,22 @@ class EventListener implements Listener {
 
     // Block Ticking Disabled Events
     public function onBlockUpdate(BlockUpdateEvent $event): void {
+    }
+
+    public function onFarmlandHydrationChange(FarmlandHydrationChangeEvent $event): void {
         $block = $event->getBlock();
-        $world = $block->getPosition()->getWorld();
+        $player = $event->getPlayer(); // Not all versions support this, so be careful
 
-        if ($this->plugin->isBlockTickingDisabled() && $world instanceof World) {
-            if ($block instanceof Farmland) { // ✅ If it already turned into dirt, reset it
-                $this->plugin->getLogger()->info("Restoring farmland at " . $block->getPosition()->__toString());
+        // ✅ Debug: Check if event triggers
+        $this->plugin->getLogger()->info("FarmlandHydrationChangeEvent triggered at " . $block->getPosition()->__toString());
 
-                // ✅ Schedule the farmland restoration for the next tick
-                $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(
-                    function() use ($world, $block) {
-                        $world->setBlock($block->getPosition(), VanillaBlocks::FARMLAND());
-                    }
-                ), 1);
-            }
+        // ✅ Debug: Check old & new hydration values
+        $this->plugin->getLogger()->info("Old Hydration: " . $event->getOldHydration() . " | New Hydration: " . $event->getNewHydration());
+
+        if ($this->plugin->isBlockTickingDisabled()) {
+            // ✅ Force hydration to max
+            $event->setNewHydration(7);
+            $this->plugin->getLogger()->info("Setting hydration to max (7) at " . $block->getPosition()->__toString());
         }
     }
 
