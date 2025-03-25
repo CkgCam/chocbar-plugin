@@ -54,8 +54,7 @@ class EventListener implements Listener {
     }
 
     // Block Ticking Disabled Events
-    public function onBlockUpdate(BlockUpdateEvent $event): void
-    {
+    public function onBlockUpdate(BlockUpdateEvent $event): void {
         $block = $event->getBlock();
 
         if ($this->plugin->isBlockTickingDisabled()) {
@@ -68,8 +67,8 @@ class EventListener implements Listener {
                 // Get world safely
                 $world = $block->getPosition()->getWorld();
                 if ($world instanceof World) {
-                    // ✅ Force farmland to stay hydrated
-                    $world->setBlock($block->getPosition(), VanillaBlocks::FARMLAND()->setMoisture(7));
+                    // ✅ Replace block with fresh farmland to prevent drying
+                    $world->setBlock($block->getPosition(), VanillaBlocks::FARMLAND());
                 }
             }
         }
