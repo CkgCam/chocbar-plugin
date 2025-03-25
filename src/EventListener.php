@@ -55,32 +55,16 @@ class EventListener implements Listener {
 
     // Block Ticking Disabled Events
     public function onBlockUpdate(BlockUpdateEvent $event): void {
-        $block = $event->getBlock();
-        if ($this->plugin->isBlockTickingDisabled() && $block instanceof Farmland) {
-            $block->getPosition()->getWorld()->setBlock($block->getPosition(), VanillaBlocks::FARMLAND());
-        }
     }
 
-
-    public function onFarmlandHydrationChange(FarmlandHydrationChangeEvent $event): void {
-        $block = $event->getBlock();
-        $player = $event->getPlayer(); // Not all versions support this, so be careful
-
-        // ✅ Debug: Check if event triggers
-        $this->plugin->getLogger()->info("FarmlandHydrationChangeEvent triggered at " . $block->getPosition()->__toString());
-
-        // ✅ Debug: Check old & new hydration values
-        $this->plugin->getLogger()->info("Old Hydration: " . $event->getOldHydration() . " | New Hydration: " . $event->getNewHydration());
-
+    public function onFarmlandHydrationChange(FarmlandHydrationChangeEvent $event): void
+    {
         if ($this->plugin->isBlockTickingDisabled()) {
-            // ✅ Force hydration to max
-            $event->setNewHydration(7);
-            $this->plugin->getLogger()->info("Setting hydration to max (7) at " . $block->getPosition()->__toString());
+            $event->setNewHydration(7); // Force max hydration
+            //$event->cancel(); // Prevent dirt conversion
         }
     }
-
-
-    public function onBlockSpread(BlockSpreadEvent $event): void {
+        public function onBlockSpread(BlockSpreadEvent $event): void {
         $source = $event->getSource();
         if ($this->plugin->isBlockTickingDisabled() || $source instanceof Lava || $source instanceof Water) {
             $event->cancel();
