@@ -21,7 +21,7 @@ use pocketmine\event\entity\{
     EntityPreExplodeEvent,
     EntityTrampleFarmlandEvent
 };
-use pocketmine\block\{Farmland, Lava, Water};
+use pocketmine\block\VanillaBlocks;
 use pocketmine\player\Player;
 
 class EventListener implements Listener {
