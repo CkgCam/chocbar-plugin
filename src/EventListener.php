@@ -60,19 +60,9 @@ class EventListener implements Listener {
         if ($this->plugin->isBlockTickingDisabled()) {
             if ($block instanceof Farmland) {
                 $event->cancel(); // Stop the natural update
-
-                // Debug log to check if it's working
-                $this->plugin->getLogger()->info("Cancelling farmland hydration event at " . $block->getPosition()->__toString());
-
-                // Get world safely
-                $world = $block->getPosition()->getWorld();
-                if ($world instanceof World) {
-                    // ✅ Replace block with fresh farmland to prevent drying
-                    $world->setBlock($block->getPosition(), VanillaBlocks::FARMLAND());
                 }
             }
         }
-    }
 
 
 
