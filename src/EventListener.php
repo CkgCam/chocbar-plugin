@@ -53,6 +53,7 @@ class EventListener implements Listener {
     // Block Ticking Disabled Events
     public function onBlockUpdate(BlockUpdateEvent $event): void {
         if ($this->plugin->isBlockTickingDisabled() || $event->getBlock() instanceof Farmland) {
+            $this->plugin->getLogger()->info("Canceeling famrland hydrion event");
             $event->cancel();
         }
     }
