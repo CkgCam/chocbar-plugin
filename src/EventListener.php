@@ -56,11 +56,7 @@ class EventListener implements Listener {
     // Block Ticking Disabled Events
     public function onBlockUpdate(BlockUpdateEvent $event): void
     {
-        // If farmland updates are globally disabled
-        if ($this->plugin->isBlockTickingDisabled()) {
-            $event->cancel();
-            return;
-        }
+        $event->cancel();
     }
         public function onBlockSpread(BlockSpreadEvent $event): void {
         $source = $event->getSource();
