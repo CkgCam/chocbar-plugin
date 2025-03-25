@@ -52,18 +52,21 @@ class EventListener implements Listener {
 
     // Block Ticking Disabled Events
     public function onBlockUpdate(BlockUpdateEvent $event): void {
-      //  if ($this->plugin->isBlockTickingDisabled() || $event->getBlock() instanceof Farmland) {
-    //        $this->plugin->getLogger()->info("Canceeling famrland hydrion event");
-   //         $event->cancel();
-  //      }
-    }
+        $block = $event->getBlock();
 
-    public function onFarmlandHydrationChange(FarmlandHydrationChangeEvent $event): void {
         if ($this->plugin->isBlockTickingDisabled()) {
-            $this->plugin->getLogger()->info("Canceeling famrland hydrion event");
-            $event->cancel(); // This stops the hydration change
+            if ($block instanceof Farmland) {
+                $event->cancel(); // Stop the natural update
+
+                // Debug log to check if it's working
+                $this->plugin->getLogger()->info("Cancelling farmland hydration event at " . $block->getPosition()->__toString());
+
+                // Re-set the block as Farmland
+                $block->getPosition()->getWorld()->setBlock($block->getPosition(), VanillaBlocks::FARMLAND());
+            }
         }
     }
+
 
 
     public function onBlockSpread(BlockSpreadEvent $event): void {
