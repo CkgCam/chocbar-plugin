@@ -21,7 +21,10 @@ use pocketmine\event\entity\{
     EntityPreExplodeEvent,
     EntityTrampleFarmlandEvent
 };
+use pocketmine\block\Farmland;
 use pocketmine\block\VanillaBlocks;
+use pocketmine\world\World;
+
 use pocketmine\player\Player;
 
 class EventListener implements Listener {
@@ -51,7 +54,8 @@ class EventListener implements Listener {
     }
 
     // Block Ticking Disabled Events
-    public function onBlockUpdate(BlockUpdateEvent $event): void {
+    public function onBlockUpdate(BlockUpdateEvent $event): void
+    {
         $block = $event->getBlock();
 
         if ($this->plugin->isBlockTickingDisabled()) {
@@ -61,8 +65,12 @@ class EventListener implements Listener {
                 // Debug log to check if it's working
                 $this->plugin->getLogger()->info("Cancelling farmland hydration event at " . $block->getPosition()->__toString());
 
-                // Re-set the block as Farmland
-                $block->getPosition()->getWorld()->setBlock($block->getPosition(), VanillaBlocks::FARMLAND());
+                // Get world safely
+                $world = $block->getPosition()->getWorld();
+                if ($world instanceof World) {
+                    // ✅ Force farmland to stay hydrated
+                    $world->setBlock($block->getPosition(), VanillaBlocks::FARMLAND()->setMoisture(7));
+                }
             }
         }
     }
