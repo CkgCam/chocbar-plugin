@@ -56,13 +56,19 @@ class EventListener implements Listener {
     // Block Ticking Disabled Events
     public function onBlockUpdate(BlockUpdateEvent $event): void {
         $block = $event->getBlock();
+        $world = $block->getPosition()->getWorld();
 
-        if ($this->plugin->isBlockTickingDisabled()) {
+        if ($this->plugin->isBlockTickingDisabled() && $world instanceof World) {
             if ($block instanceof Farmland) {
                 $event->cancel(); // Stop the natural update
-                }
+                //$this->plugin->getLogger()->info("Preventing farmland update at " . $block->getPosition()->__toString());
+            }
+            elseif ($block instanceof Dirt) { // ✅ If it already turned into dirt, reset it
+               // $this->plugin->getLogger()->info("Restoring farmland at " . $block->getPosition()->__toString());
+                $world->setBlock($block->getPosition(), VanillaBlocks::FARMLAND());
             }
         }
+    }
 
 
 
