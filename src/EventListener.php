@@ -88,12 +88,26 @@ class EventListener implements Listener {
         }
     }
 
-    public function FarmlandHydrationChangeEvent(FarmlandHydrationChangeEvent $event): void {
+    public function onFarmlandHydrationChange(FarmlandHydrationChangeEvent $event): void {
         if ($this->plugin->isBlockTickingDisabled()) {
+            $player = $event->getPlayer(); // Not all versions pass a player, so be careful
+            $block = $event->getBlock();
+
+            // Debug message to check if event fires
+            if ($player instanceof Player) {
+                $player->sendMessage("§e[Debug] Farmland hydration triggered at " . $block->getPosition()->__toString());
+            }
+
             $event->setNewHydration(7); // Force max hydration
-            //$event->cancel();           // Prevent dirt conversion
+            //$event->cancel();  // This might be needed to fully prevent hydration changes
+
+            // Debug confirmation
+            if ($player instanceof Player) {
+                $player->sendMessage("§a[Debug] Hydration set to max (7)");
+            }
         }
     }
+
 
     public function onEntityTrampleFarmland(EntityTrampleFarmlandEvent $event): void {
         if ($this->plugin->isBlockTickingDisabled()) {
