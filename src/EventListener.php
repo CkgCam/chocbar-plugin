@@ -65,7 +65,13 @@ class EventListener implements Listener {
             }
             elseif ($block instanceof Dirt) { // ✅ If it already turned into dirt, reset it
                 $this->plugin->getLogger()->info("Restoring farmland at " . $block->getPosition()->__toString());
-                $world->setBlock($block->getPosition(), VanillaBlocks::FARMLAND());
+
+                // ✅ Schedule the farmland restoration for the next tick
+                $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(
+                    function() use ($world, $block) {
+                        $world->setBlock($block->getPosition(), VanillaBlocks::FARMLAND());
+                    }
+                ), 1);
             }
         }
     }
