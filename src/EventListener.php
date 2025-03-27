@@ -57,16 +57,9 @@ class EventListener implements Listener {
     public function onBlockUpdate(BlockUpdateEvent $event): void {
         $block = $event->getBlock();
 
-        // Detect if the farmland tries to dehydrate (update to dirt)
-        if ($block instanceof Farmland) {
-            $pos = $block->getPosition();
-            $world = $pos->getWorld();
-
-            // Explicitly replace the dehydrated farmland with fully hydrated farmland block
-            $world->setBlock($pos, VanillaBlocks::FARMLAND(), false);
-
-            // Cancel the event to stop further propagation
-            $event->cancel();
+        // explicitly match the block name
+        if ($block->getName() === VanillaBlocks::FARMLAND()->getName()) {
+            $event->cancel(); // Stop any updates (like dehydration)
         }
     }
 
