@@ -57,16 +57,6 @@ class EventListener implements Listener {
     public function onBlockUpdate(BlockUpdateEvent $event): void {
     }
 
-    public function guardFarmland(BlockFormEvent $event): void
-    {
-        $block = $event->getBlock();
-        $newState = $event->getNewState();
-
-        // Cancel event specifically for farmland turning into dirt
-        $event->setCancelled($block instanceof Farmland && $newState instanceof Dirt);
-    }
-
-
         public function onBlockSpread(BlockSpreadEvent $event): void {
         $source = $event->getSource();
         if ($this->plugin->isBlockTickingDisabled() || $source instanceof Lava || $source instanceof Water) {
