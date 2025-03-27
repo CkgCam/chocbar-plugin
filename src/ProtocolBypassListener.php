@@ -1,5 +1,4 @@
 ﻿<?php
-
 declare(strict_types=1);
 
 namespace ckgcam\chocbar;
@@ -10,7 +9,7 @@ use pocketmine\network\mcpe\protocol\LoginPacket;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
 
 class ProtocolBypassListener implements Listener {
-    //maby fux
+
     public function onPacketReceive(DataPacketReceiveEvent $event): void {
         $packet = $event->getPacket();
 
