@@ -14,13 +14,13 @@ use pocketmine\event\block\{
     BlockGrowEvent,
     BlockFormEvent,
     BlockBreakEvent,
-    BlockPlaceEvent,
-    FarmlandHydrationChangeEvent
+    BlockPlaceEvent
 };
 use pocketmine\event\entity\{
     EntityPreExplodeEvent,
     EntityTrampleFarmlandEvent
 };
+use pocketmine\event\block\FarmlandHydrationChangeEvent;
 use pocketmine\block\Farmland;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\world\World;
@@ -56,18 +56,12 @@ class EventListener implements Listener {
     // Block Ticking Disabled Events
     public function onBlockUpdate(BlockUpdateEvent $event): void
     {
-        $block = $event->getBlock();
+    }
 
-        if ($block instanceof Farmland) {
-            $position = $block->getPosition();
-            $world = $position->getWorld();
-
-            // Create farmland with hydration at max level (7)
-            $hydratedFarmland = VanillaBlocks::FARMLAND()->setHydration(7);
-
-            $world->setBlock($position, $hydratedFarmland, false);
-            $event->cancel(); // Cancel further processing
-        }
+    public function onFarmlandHydrationChange(FarmlandHydrationChangeEvent $event): void
+    {
+        // Prevent farmland from dehydrating by canceling the event
+        $event->cancel();
     }
 
 
