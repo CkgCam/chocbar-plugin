@@ -25,6 +25,9 @@ use pocketmine\block\Farmland;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\world\World;
 
+use pocketmine\event\server\DataPacketReceiveEvent;
+use pocketmine\network\mcpe\protocol\LoginPacket;
+
 use pocketmine\player\Player;
 
 class EventListener implements Listener {
@@ -33,6 +36,19 @@ class EventListener implements Listener {
 
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
+    }
+
+    public function onDataPacketReceive(DataPacketReceiveEvent $event): void {
+        $packet = $event->getPacket();
+
+        if ($packet instanceof LoginPacket) {
+            // Example protocol version you want to accept (786):
+            $allowedProtocols = [671, 786]; // Include official and newer protocol versions
+            if (in_array($packet->protocol, $allowedProtocols)) {
+                // Override PocketMine protocol check by forcing current supported protocol
+                $packet->protocol = ProtocolInfo::CURRENT_PROTOCOL;
+            }
+        }
     }
 
     public function onPlayerJoin(PlayerJoinEvent $event): void {
