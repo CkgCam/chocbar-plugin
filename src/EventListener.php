@@ -14,17 +14,16 @@ use pocketmine\event\block\{
     BlockGrowEvent,
     BlockFormEvent,
     BlockBreakEvent,
-    BlockPlaceEvent
+    BlockPlaceEvent,
+    FarmlandHydrationChangeEvent
 };
 use pocketmine\event\entity\{
     EntityPreExplodeEvent,
     EntityTrampleFarmlandEvent
 };
-use pocketmine\event\block\FarmlandHydrationChangeEvent;
 use pocketmine\block\Farmland;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\world\World;
-
 use pocketmine\player\Player;
 
 class EventListener implements Listener {
@@ -48,15 +47,12 @@ class EventListener implements Listener {
         }
     }
 
-
-
     // Block Ticking Disabled Events
-    public function onBlockUpdate(BlockUpdateEvent $event): void {
-    }
+    public function onBlockUpdate(BlockUpdateEvent $event): void {}
 
-        public function onBlockSpread(BlockSpreadEvent $event): void {
+    public function onBlockSpread(BlockSpreadEvent $event): void {
         $source = $event->getSource();
-        if ($this->plugin->isBlockTickingDisabled() || $source instanceof Lava || $source instanceof Water) {
+        if ($this->plugin->isBlockTickingDisabled() || $source instanceof \pocketmine\block\Lava || $source instanceof \pocketmine\block\Water) {
             $event->cancel();
         }
     }
@@ -85,14 +81,12 @@ class EventListener implements Listener {
         }
     }
 
-
-
     public function onEntityTrampleFarmland(EntityTrampleFarmlandEvent $event): void {
         if ($this->plugin->isBlockTickingDisabled()) {
-            // Cancel trampling so farmland doesn't turn into dirt
             $event->cancel();
         }
     }
+
     // Explosion Events
     public function onEntityPreExplode(EntityPreExplodeEvent $event): void {
         $event->setBlockBreaking(false);
