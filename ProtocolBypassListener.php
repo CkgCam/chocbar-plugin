@@ -1,5 +1,8 @@
 ﻿<?php
-namespace ckgcam\chocbar;;
+
+declare(strict_types=1);
+
+namespace ckgcam\chocbar;
 
 use pocketmine\event\Listener;
 use pocketmine\event\server\DataPacketReceiveEvent;
