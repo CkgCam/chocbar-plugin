@@ -62,11 +62,11 @@ class EventListener implements Listener {
             $position = $block->getPosition();
             $world = $position->getWorld();
 
-            // Meta value 7 = fully hydrated farmland
-            $hydratedFarmland = VanillaBlocks::FARMLAND()->setMeta(7);
-            $world->setBlock($position, $hydratedFarmland, false);
+            // Create farmland with hydration at max level (7)
+            $hydratedFarmland = VanillaBlocks::FARMLAND()->setHydration(7);
 
-            $event->cancel(); // prevent further dehydration update
+            $world->setBlock($position, $hydratedFarmland, false);
+            $event->cancel(); // Cancel further processing
         }
     }
 
