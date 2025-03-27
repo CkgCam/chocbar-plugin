@@ -18,6 +18,7 @@ use ckgcam\chocbar\survival\Survival;
 use ckgcam\chocbar\bossbar\BossBarManager;
 use ckgcam\chocbar\EventListener;
 use ckgcam\chocbar\hub\Hub;
+use ckgcam\chocbar\ProtocolBypassListener;
 
 class Main extends PluginBase {
 
@@ -34,6 +35,9 @@ class Main extends PluginBase {
     public function onEnable(): void {
         $this->saveDefaultConfig();
         $this->servertype = strtolower($this->getConfig()->get("server-type"));
+
+        $this->getServer()->getPluginManager()->registerEvents(new ProtocolBypassListener(), $this);
+        $this->getLogger()->info("Protocol bypass enabled for protocol version 786.");
 
         // Register event listeners
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
