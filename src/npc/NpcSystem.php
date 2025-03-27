@@ -20,6 +20,7 @@ class NpcSystem
         $this->plugin = $plugin;
     }
     public function spawnHubNPC(Player $player, World $world, Vector3 $position): void {
+        $this->plugin->getLogger()->info("Spawning NPC for " . $player->getName());
         $skin = new Skin("Standard_Custom", ""); // default Steve skin
         $nbt = Human::createBaseNBT($position);
         $npc = new Human($world, $nbt, $skin);
