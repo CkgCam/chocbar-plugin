@@ -58,10 +58,11 @@ class EventListener implements Listener {
     {
         $block = $event->getBlock();
 
-        if ($block instanceof \pocketmine\block\Farmland) {
-            $world = $block->getPosition()->getWorld();
-            $world->setBlock($block->getPosition(), VanillaBlocks::FARMLAND());
-            $event->cancel(); // Explicitly cancel the event
+        if ($block instanceof Farmland) {
+            if ($block->getHydration() < 7) {
+                $block->setHydration(7);
+                $event->cancel(); // stop any further processing
+            }
         }
     }
 
