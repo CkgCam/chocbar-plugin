@@ -42,21 +42,13 @@ class Hub implements Listener {
         $this->plugin->getLogger()->info(TextFormat::GREEN . "Time locked to midday in Hub worlds.");
     }
 
-    public function onPlayerJoin(PlayerJoinEvent $player): void {
+    public function onPlayerJoin(PlayerJoinEvent $event): void {
+        $player = $event->getPlayer();
+
         $this->plugin->getLogger()->info("Hub: Player joined: " . $player->getName());
 
-        $player = $player->getPlayer();
-
-        $this->bossBarManager->showBossBar($player, "Chocbar Hub | /menu for more");
-
-        $world = $this->plugin->getServer()->getWorldManager()->getWorldByName("hub");
-        if ($world !== null) {
-            $pos = new Vector3(10, 65, 10);
-            $npcSystem = $this->plugin->getNpcSystem();
-            if ($npcSystem !== null) {
-                $npcSystem->spawnHubNPC($player, $world, $pos);
-            }
-        }
+        // Boss bar and NPC stuff here...
     }
+
 
 }

@@ -37,21 +37,19 @@ class EventListener implements Listener {
 
     public function onPlayerJoin(PlayerJoinEvent $event): void {
         $player = $event->getPlayer();
-        $hotbarConfig = $this->plugin->getConfig()->get("hotbar");
 
-        $this->plugin->getHotbarMenuManager()->AttachHud($player, $hotbarConfig, "hub");
+        $this->main->getLogger()->info("EventListener: Player joined: " . $player->getName());
 
-        $serverType = $this->plugin->getServerType();
-        $survival = $this->plugin->getSurvival();
-        $hub = $this->plugin->getHub();
-
-        if ($serverType === "survival" && $survival !== null) {
-            $survival->onPlayerJoined($player);
+        if ($this->main->getServerType() === "hub") {
+            $hub = $this->main->getHub();
+            if ($hub !== null) {
+                $hub->onPlayerJoin($event); // ← make sure this is being called
+            }
         }
-        if ($serverType === "hub" && $hub !== null) {
-            $hub->onPlayerJoined($player);
-        }
+
+        // maybe survival mode too
     }
+
 
     // Block Ticking Disabled Events
     public function onBlockUpdate(BlockUpdateEvent $event): void {
