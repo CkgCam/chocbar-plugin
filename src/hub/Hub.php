@@ -45,21 +45,16 @@ class Hub implements Listener {
     public function onPlayerJoin(PlayerJoinEvent $event): void {
         $player = $event->getPlayer();
 
-        // Show boss bar
         $this->bossBarManager->showBossBar($player, "Chocbar Hub | /menu for more");
 
         $world = $this->plugin->getServer()->getWorldManager()->getWorldByName("hub");
-
         if ($world !== null) {
             $pos = new Vector3(10, 65, 10);
-
             $npcSystem = $this->plugin->getNpcSystem();
             if ($npcSystem !== null) {
-                // Spawn the NPC to all currently online players
-                foreach ($this->plugin->getServer()->getOnlinePlayers() as $p) {
-                    $npcSystem->spawnHubNPC($p, $world, $pos);
-                }
+                $npcSystem->spawnHubNPC($player, $world, $pos);
             }
         }
     }
+
 }
