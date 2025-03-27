@@ -58,12 +58,10 @@ class EventListener implements Listener {
     {
         $block = $event->getBlock();
 
-        if ($block instanceof Farmland) {
-            // Get the level from the block's position
-            $level = $block->getPosition()->getLevel();
-
-            // Revert the block to farmland immediately if it tries to dehydrate
-            $level->setBlock($block->getPosition(), Block::get(Block::FARMLAND));
+        if ($block instanceof \pocketmine\block\Farmland) {
+            $world = $block->getPosition()->getWorld();
+            $world->setBlock($block->getPosition(), VanillaBlocks::FARMLAND());
+            $event->cancel(); // Explicitly cancel the event
         }
     }
 
