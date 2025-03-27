@@ -1,5 +1,7 @@
 ﻿<?php
 
+declare(strict_types=1);
+
 namespace ckgcam\chocbar;
 
 use pocketmine\event\Listener;
