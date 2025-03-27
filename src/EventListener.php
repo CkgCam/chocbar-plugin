@@ -38,17 +38,16 @@ class EventListener implements Listener {
     public function onPlayerJoin(PlayerJoinEvent $event): void {
         $player = $event->getPlayer();
 
-        $this->main->getLogger()->info("EventListener: Player joined: " . $player->getName());
+        $this->plugin->getLogger()->info("EventListener: Player joined: " . $player->getName());
 
-        if ($this->main->getServerType() === "hub") {
-            $hub = $this->main->getHub();
+        if ($this->plugin->getServerType() === "hub") {
+            $hub = $this->plugin->getHub();
             if ($hub !== null) {
-                $hub->onPlayerJoin($event); // ← make sure this is being called
+                $hub->onPlayerJoin($event);
             }
         }
-
-        // maybe survival mode too
     }
+
 
 
     // Block Ticking Disabled Events
