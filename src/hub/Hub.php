@@ -42,8 +42,10 @@ class Hub implements Listener {
         $this->plugin->getLogger()->info(TextFormat::GREEN . "Time locked to midday in Hub worlds.");
     }
 
-    public function onPlayerJoin(PlayerJoinEvent $event): void {
-        $player = $event->getPlayer();
+    public function onPlayerJoin(PlayerJoinEvent $player): void {
+        $this->plugin->getLogger()->info("Hub: Player joined: " . $player->getName());
+
+        $player = $player->getPlayer();
 
         $this->bossBarManager->showBossBar($player, "Chocbar Hub | /menu for more");
 
