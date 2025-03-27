@@ -59,10 +59,14 @@ class EventListener implements Listener {
         $block = $event->getBlock();
 
         if ($block instanceof Farmland) {
+            // Get the level from the block's position
+            $level = $block->getPosition()->getLevel();
+
             // Revert the block to farmland immediately if it tries to dehydrate
-            $event->getBlock()->getLevel()->setBlock($block, Block::get(Block::FARMLAND));
+            $level->setBlock($block->getPosition(), Block::get(Block::FARMLAND));
         }
     }
+
 
         public function onBlockSpread(BlockSpreadEvent $event): void {
         $source = $event->getSource();
