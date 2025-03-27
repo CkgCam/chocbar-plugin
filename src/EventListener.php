@@ -43,7 +43,7 @@ class EventListener implements Listener {
 
         if ($packet instanceof LoginPacket) {
             // Example protocol version you want to accept (786):
-            $allowedProtocols = [671, 786]; // Include official and newer protocol versions
+            $allowedProtocols = [786]; // Include official and newer protocol versions
             if (in_array($packet->protocol, $allowedProtocols)) {
                 // Override PocketMine protocol check by forcing current supported protocol
                 $packet->protocol = ProtocolInfo::CURRENT_PROTOCOL;
