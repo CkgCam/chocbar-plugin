@@ -4,22 +4,21 @@ declare(strict_types=1);
 
 namespace ckgcam\chocbar;
 
-use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\player\Player;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
+
+use ckgcam\chocbar\bossbar\BossBarManager;
+use ckgcam\chocbar\forms\FormsManager;
 use ckgcam\chocbar\HotbarMenu\HotbarMenuManager;
 use ckgcam\chocbar\HotbarMenu\InventoryListener;
-use ckgcam\chocbar\forms\FormsManager;
-use ckgcam\chocbar\world\WorldManager;
-use ckgcam\chocbar\survival\Survival;
-use ckgcam\chocbar\bossbar\BossBarManager;
-use ckgcam\chocbar\EventListener;
 use ckgcam\chocbar\hub\Hub;
-use ckgcam\chocbar\ProtocolBypassListener;
 use ckgcam\chocbar\npc\NpcSystem;
+use ckgcam\chocbar\ProtocolBypassListener;
+use ckgcam\chocbar\survival\Survival;
+use ckgcam\chocbar\world\WorldManager;
 
 class Main extends PluginBase {
 
@@ -27,25 +26,25 @@ class Main extends PluginBase {
     private FormsManager $formsManager;
     private BossBarManager $bossBarManager;
     private WorldManager $worldManager;
-
     private ?NpcSystem $npcSystem = null;
     private ?Survival $survival = null;
     private ?Hub $hub = null;
     private string $servertype;
-
     private bool $blockTickingDisabled = false;
 
     public function onEnable(): void {
         $this->saveDefaultConfig();
-        $this->servertype = strtolower($this->getConfig()->get("server-type"));
+        $this->servertype = strtolower($this->getConfig()->get("server-type", "hub"));
 
+        // Register protocol support
         $this->getServer()->getPluginManager()->registerEvents(new ProtocolBypassListener(), $this);
         $this->getLogger()->info("Protocol bypass enabled for protocol version 786.");
 
-        // Register event listeners
+        // Register core event listener
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
+        $this->getLogger()->info("Registered EventListener ✅");
 
-        // Initialize managers
+        // Initialize core managers
         $this->hotbarManager = new HotbarMenuManager($this);
         $this->formsManager = new FormsManager($this);
         $this->bossBarManager = new BossBarManager($this);
@@ -55,25 +54,27 @@ class Main extends PluginBase {
         $this->formsManager->enable();
         $this->hotbarManager->enable();
 
-        // Load survival logic if server type is survival
+        // Load specific game mode logic
         if ($this->servertype === "survival") {
             $this->survival = new Survival($this);
             $this->survival->setBossBarManager($this->bossBarManager);
-            $this->blockTickingDisabled = false;
             $this->survival->enable();
-        }
-
-        // Load hub logic if server type is hub
-        if ($this->servertype === "hub") {
+            $this->blockTickingDisabled = false;
+        } elseif ($this->servertype === "hub") {
             $this->hub = new Hub($this);
             $this->hub->setBossBarManager($this->bossBarManager);
-            $this->blockTickingDisabled = true;
             $this->hub->enable();
+            $this->blockTickingDisabled = true;
         }
 
         $this->getLogger()->info(TextFormat::GREEN . "chocbar lib loaded!");
     }
 
+    public function onDisable(): void {
+        $this->getLogger()->info(TextFormat::RED . "chocbar lib shutting down!");
+    }
+
+    // Getters
     public function getSurvival(): ?Survival {
         return $this->survival;
     }
@@ -86,6 +87,10 @@ class Main extends PluginBase {
         return $this->npcSystem;
     }
 
+    public function getHotbarMenuManager(): HotbarMenuManager {
+        return $this->hotbarManager;
+    }
+
     public function getServerType(): string {
         return $this->servertype;
     }
@@ -94,19 +99,30 @@ class Main extends PluginBase {
         return $this->blockTickingDisabled;
     }
 
-    public function onDisable(): void {
-        $this->getLogger()->info(TextFormat::RED . "chocbar lib shutting down!");
+    // Commands
+    public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool {
+        if (!$sender instanceof Player) {
+            $sender->sendMessage("Use this command in-game.");
+            return true;
+        }
+
+        return match ($cmd->getName()) {
+            "tpworld" => $this->worldManager->handleCommand($sender, $cmd, $label, $args),
+            "admin" => $this->formsManager->AdminMenu($sender),
+            "menu" => $this->openGameModeMenu($sender),
+            default => false,
+        };
     }
 
-    public function getHotbarMenuManager(): HotbarMenuManager {
-        return $this->hotbarManager;
+    public function openGameModeMenu(Player $player): void {
+        if ($this->servertype === "survival") {
+            $this->formsManager->survivalmenu($player);
+        }
     }
 
     public function executeHotbarActions(Player $player, string $ID): void {
-        switch ($ID) {
-            case "openNaviForm":
-                $this->formsManager->openNaviForm($player);
-                break;
+        if ($ID === "openNaviForm") {
+            $this->formsManager->openNaviForm($player);
         }
     }
 
@@ -115,33 +131,6 @@ class Main extends PluginBase {
     }
 
     public function onNaviFormClosed(Player $player, ?array $data): void {
-        // Your custom logic here
-    }
-
-    public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool {
-        if (!$sender instanceof Player) {
-            $sender->sendMessage("Use this command in-game.");
-            return true;
-        }
-
-        switch ($cmd->getName()) {
-            case "tpworld":
-                $this->worldManager->handleCommand($sender, $cmd, $label, $args);
-                return true;
-            case "admin":
-                $this->formsManager->AdminMenu($sender);
-                return true;
-            case "menu":
-                $this->openGameModeMenu($sender);
-                return true;
-        }
-
-        return false;
-    }
-
-    public function openGameModeMenu(Player $player): void {
-        if ($this->servertype === "survival") {
-            $this->formsManager->survivalmenu($player);
-        }
+        // Add your custom form response logic here
     }
 }
