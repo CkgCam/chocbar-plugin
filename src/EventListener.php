@@ -56,8 +56,14 @@ class EventListener implements Listener {
     // Block Ticking Disabled Events
     public function onBlockUpdate(BlockUpdateEvent $event): void
     {
-        $event->cancel();
+        $block = $event->getBlock();
+
+        if ($block instanceof Farmland) {
+            // Revert the block to farmland immediately if it tries to dehydrate
+            $event->getBlock()->getLevel()->setBlock($block, Block::get(Block::FARMLAND));
+        }
     }
+
         public function onBlockSpread(BlockSpreadEvent $event): void {
         $source = $event->getSource();
         if ($this->plugin->isBlockTickingDisabled() || $source instanceof Lava || $source instanceof Water) {
