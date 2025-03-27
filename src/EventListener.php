@@ -103,29 +103,6 @@ class EventListener implements Listener {
             $event->cancel();
         }
     }
-
-    // Disable Building Events
-    public function onBlockBreak(BlockBreakEvent $event): void {
-        $player = $event->getPlayer();
-        if (!$this->plugin->getServer()->isOp($player->getName())) {
-            $event->cancel();
-        }
-    }
-
-    public function onBlockPlace(BlockPlaceEvent $event): void {
-        $player = $event->getPlayer();
-
-        if (!$this->plugin->getServer()->isOp($player->getName())) {
-            $event->cancel();
-            $player->sendMessage("§cYou're not allowed to place blocks.");
-        } else {
-            foreach ($event->getTransaction()->getBlocks() as [$x, $y, $z, $block]) {
-                $player->sendMessage("§7[Debug] Placing: " . $block->getName() . " at $x, $y, $z");
-            }
-            $player->sendMessage("§a[Debug] Block place allowed for OP.");
-        }
-    }
-
     // Explosion Events
     public function onEntityPreExplode(EntityPreExplodeEvent $event): void {
         $event->setBlockBreaking(false);
