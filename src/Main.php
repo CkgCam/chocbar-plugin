@@ -37,7 +37,6 @@ class Main extends PluginBase {
 
         // Register event listeners
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
-        $this->getServer()->getPluginManager()->registerEvents(new InventoryListener($this), $this);
 
         // Initialize managers
         $this->hotbarManager = new HotbarMenuManager($this);
