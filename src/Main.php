@@ -19,6 +19,7 @@ use ckgcam\chocbar\bossbar\BossBarManager;
 use ckgcam\chocbar\EventListener;
 use ckgcam\chocbar\hub\Hub;
 use ckgcam\chocbar\ProtocolBypassListener;
+use ckgcam\chocbar\npc\NpcSystem;
 
 class Main extends PluginBase {
 
@@ -26,6 +27,8 @@ class Main extends PluginBase {
     private FormsManager $formsManager;
     private BossBarManager $bossBarManager;
     private WorldManager $worldManager;
+
+    private ?NpcSystem $npcSystem = null;
     private ?Survival $survival = null;
     private ?Hub $hub = null;
     private string $servertype;
@@ -47,6 +50,7 @@ class Main extends PluginBase {
         $this->formsManager = new FormsManager($this);
         $this->bossBarManager = new BossBarManager($this);
         $this->worldManager = new WorldManager($this);
+        $this->npcSystem = new NpcSystem($this);
 
         $this->formsManager->enable();
         $this->hotbarManager->enable();
@@ -76,6 +80,10 @@ class Main extends PluginBase {
 
     public function getHub(): ?Hub {
         return $this->hub;
+    }
+
+    public function getNpcSystem(): ?NpcSystem {
+        return $this->npcSystem;
     }
 
     public function getServerType(): string {
