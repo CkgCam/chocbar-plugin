@@ -55,12 +55,15 @@ class EventListener implements Listener {
 
     // Block Ticking Disabled Events
     public function onBlockUpdate(BlockUpdateEvent $event): void {
-        $block = $event->getBlock();
+    }
 
-         //explicitly match the block name
-        if ($block->getName() === VanillaBlocks::FARMLAND()->getName()) {
-            $event->cancel(); // Stop any updates (like dehydration)
-        }
+    public function guardFarmland(BlockFormEvent $event): void
+    {
+        $block = $event->getBlock();
+        $newState = $event->getNewState();
+
+        // Cancel event specifically for farmland turning into dirt
+        $event->setCancelled($block instanceof Farmland && $newState instanceof Dirt);
     }
 
 
