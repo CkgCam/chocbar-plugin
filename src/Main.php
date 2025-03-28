@@ -16,9 +16,9 @@ use ckgcam\chocbar\HotbarMenu\HotbarMenuManager;
 use ckgcam\chocbar\HotbarMenu\InventoryListener;
 use ckgcam\chocbar\hub\Hub;
 use ckgcam\chocbar\npc\NpcSystem;
-use ckgcam\chocbar\ProtocolBypassListener;
 use ckgcam\chocbar\survival\Survival;
 use ckgcam\chocbar\world\WorldManager;
+use ckgcam\chocbar\EventListener;
 
 class Main extends PluginBase {
 
