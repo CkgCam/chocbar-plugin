@@ -24,7 +24,7 @@ class NpcSystem {
         $this->plugin = $plugin;
     }
 
-    public function spawnHubNPC(Player $player, World $world, Vector3 $position): void {
+    public function spawnHubNPC(Player $player, World $world, Vector3 $position, String $nametag): void {
         $name = $player->getName();
 
         if (isset($this->spawnedNpcs[$name]) && !$this->spawnedNpcs[$name]->isClosed()) {
@@ -34,11 +34,12 @@ class NpcSystem {
 
         $this->plugin->getLogger()->info("[chocbar] Spawning NPC for $name");
 
-        $skin = $this->loadSkin("test") ?? new Skin("fallback", str_repeat("\x00", 8192));
+        //$skin = $this->loadSkin("test") ?? new Skin("fallback", str_repeat("\x00", 8192));
         $location = new Location($position->getX(), $position->getY(), $position->getZ(), $world, 0, 0);
-        $npc = new HumanNPC($location, $skin);
+        //$npc = new npc_survival($location, $skin);
+        $npc = new npc_survival($location);
 
-        $npc->setNameTag("§aHello, Steve!");
+        $npc->setNameTag($nametag);
         $npc->setNameTagVisible(true);
         $npc->setNameTagAlwaysVisible(true);
 

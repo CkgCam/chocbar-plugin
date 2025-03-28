@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ckgcam\chocbar;
 
+use ckgcam\chocbar\npc\npc_survival;
 use pocketmine\plugin\PluginBase;
 use pocketmine\player\Player;
 use pocketmine\command\Command;
@@ -64,6 +65,17 @@ class Main extends PluginBase {
             $this->hub->enable();
             $this->blockTickingDisabled = true;
         }
+
+        // Register custom entity
+        EntityFactory::getInstance()->register(
+            npc_survival::class,
+            function(Location $location, CompoundTag $nbt): CustomNPC {
+                return new CustomNPC($location, $nbt);
+            },
+            ['chocbar:survival']
+        );
+
+        $this->getLogger()->info("Custom NPC entity registered!");
 
         $this->getLogger()->info(TextFormat::GREEN . "chocbar lib loaded!");
     }
