@@ -27,6 +27,7 @@ class HumanNPC extends Human {
     public function onUpdate(int $currentTick): bool {
         // Cancel movement every tick
         $this->setMotion(Vector3::zero());
+        $this->teleport($this->location); // Force back to exact position if it tries to slide
         return parent::onUpdate($currentTick);
     }
 
@@ -41,6 +42,11 @@ class HumanNPC extends Human {
     public function isPushable(): bool {
         return false;
     }
+
+    public function hasGravity(): bool {
+        return false;
+    }
+
 
     public function canSaveWithChunk(): bool {
         return false;
