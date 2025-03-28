@@ -21,6 +21,10 @@ use ckgcam\chocbar\survival\Survival;
 use ckgcam\chocbar\world\WorldManager;
 use ckgcam\chocbar\EventListener;
 
+use pocketmine\entity\EntityFactory;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\entity\Location;
+
 class Main extends PluginBase {
 
     private HotbarMenuManager $hotbarManager;

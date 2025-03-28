@@ -12,6 +12,7 @@ use pocketmine\player\Player;
 use pocketmine\world\World;
 use pocketmine\utils\Utils;
 use ckgcam\chocbar\npc\HumanNPC;
+use ckgcam\chocbar\npc\npc_survival; // Make sure this matches your namespace + class
 
 class NpcSystem {
 
