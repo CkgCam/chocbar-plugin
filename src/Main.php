@@ -34,6 +34,7 @@ class Main extends PluginBase {
 
     public function onEnable(): void {
         $this->saveDefaultConfig();
+        $this->saveResource("skins/test.png");
         $this->servertype = strtolower($this->getConfig()->get("server-type", "hub"));
 
         // Register core event listener
