@@ -20,23 +20,20 @@ class NpcSystem {
         $this->plugin = $plugin;
     }
 
-    public function spawnHubNPC(Player $player, World $world, Vector3 $position): void {
-        $name = $player->getName();
+    public function spawnHubNPC(Player $player): void {
+        $this->plugin->getLogger()->info("[chocbar] Spawning NPC for " . $player->getName());
 
-        if (isset($this->spawnedFor[$name])) {
-            $this->plugin->getLogger()->info("[chocbar] NPC already spawned for $name, skipping.");
-            return;
-        }
+        $skin = $player->getSkin(); // Use player's skin, or load a custom one
+        $world = $player->getWorld();
 
-        $this->plugin->getLogger()->info("[chocbar] Spawning NPC for $name");
+        $position = new Vector3(24.5, 28, 43.5); // change these coords as needed
 
-        $skin = $player->getSkin();
         $location = new Location(
             $position->getX(),
             $position->getY(),
             $position->getZ(),
             $world,
-            0.0, 0.0
+            0.0, 0.0 // yaw & pitch
         );
 
         $npc = new Human($location, $skin);
@@ -44,10 +41,9 @@ class NpcSystem {
         $npc->setNameTagVisible(true);
         $npc->setNameTagAlwaysVisible();
 
-        // ❗ DON'T call addEntity() + spawnTo(), just spawnTo()
-        $npc->spawnTo($player);
-
-        $this->spawnedFor[$name] = true;
+        // Spawn to all players or just one
+        $npc->spawnToAll();
     }
+
 
 }
