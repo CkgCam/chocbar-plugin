@@ -21,9 +21,6 @@ class Hub {
 
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
-
-        // Register this class as an event listener
-        $plugin->getServer()->getPluginManager()->registerEvents($this, $plugin);
     }
 
     public function setBossBarManager(BossBarManager $bossBarManager): void {
