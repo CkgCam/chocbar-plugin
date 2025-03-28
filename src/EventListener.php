@@ -49,8 +49,16 @@ class EventListener implements Listener {
     }
 
     public function onPlayerQuit(PlayerQuitEvent $event): void {
-        unset($this->plugin->getNpcSystem()->spawnedFor[$event->getPlayer()->getName()]);
+        $player = $event->getPlayer();
+
+        if ($this->plugin->getServerType() === "hub") {
+            $hub = $this->plugin->getHub();
+            if ($hub !== null) {
+                $hub->onPlayerQuitEvent($player);
+            }
+        }
     }
+
 
 
 

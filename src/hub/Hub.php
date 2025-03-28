@@ -59,6 +59,11 @@ class Hub {
         }
     }
 
+    public function onPlayerQuitEvent(Player $player): void {
+        $this->plugin->getNpcSystem()?->despawnHubNPC($player);
+    }
+
+
 
 
 

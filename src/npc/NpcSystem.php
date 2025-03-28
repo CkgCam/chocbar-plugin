@@ -45,6 +45,19 @@ class NpcSystem {
         $this->spawnedNpcs[$name] = $npc;
     }
 
+    public function despawnHubNPC(Player $player): void {
+        $name = $player->getName();
+
+        if (isset($this->spawnedNpcs[$name])) {
+            $npc = $this->spawnedNpcs[$name];
+            if (!$npc->isClosed()) {
+                $npc->close(); // remove from the world
+            }
+            unset($this->spawnedNpcs[$name]); // free memory
+            $this->plugin->getLogger()->info("[chocbar] Despawned NPC for $name");
+        }
+    }
+
 
 
 }
