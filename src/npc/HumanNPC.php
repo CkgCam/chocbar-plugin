@@ -6,8 +6,8 @@ namespace ckgcam\chocbar\npc;
 use pocketmine\entity\Human;
 use pocketmine\entity\EntitySizeInfo;
 use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\math\Vector3;
+use pocketmine\nbt\tag\CompoundTag;
 
 class HumanNPC extends Human {
 
@@ -17,21 +17,17 @@ class HumanNPC extends Human {
 
     protected function initEntity(CompoundTag $nbt): void {
         parent::initEntity($nbt);
-        $this->setImmobile(true);
-        $this->setCanSaveWithChunk(false);
+        $this->setCanSaveWithChunk(false); // Don't save NPCs to world
     }
 
     public function attack(EntityDamageEvent $source): void {
-        $source->cancel(); // No damage
+        $source->cancel(); // Can't take damage
     }
 
     public function onUpdate(int $currentTick): bool {
-        $this->setMotion(Vector3::zero()); // Freeze in place
+        // Cancel movement every tick
+        $this->setMotion(Vector3::zero());
         return parent::onUpdate($currentTick);
-    }
-
-    public function getDrops(): array {
-        return []; // No item drops
     }
 
     public function canBePushed(): bool {
@@ -40,5 +36,17 @@ class HumanNPC extends Human {
 
     public function canBeKnockedBack(): bool {
         return false;
+    }
+
+    public function isPushable(): bool {
+        return false;
+    }
+
+    public function canSaveWithChunk(): bool {
+        return false;
+    }
+
+    public function getDrops(): array {
+        return []; // Don't drop anything on death
     }
 }
