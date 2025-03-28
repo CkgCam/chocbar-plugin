@@ -21,28 +21,22 @@ class NpcSystem {
     public function spawnHubNPC(Player $player, World $world, Vector3 $position): void {
         $this->plugin->getLogger()->info("Spawning NPC for " . $player->getName());
 
-        // Use player's skin to ensure it's visible
-        $skin = $player->getSkin();
-
-        // Build the Location object
+        $skin = $player->getSkin(); // Use player's skin (visible and safe)
         $location = new Location(
             $position->getX(),
             $position->getY(),
             $position->getZ(),
             $world,
-            0.0, // yaw
-            0.0  // pitch
+            0.0, 0.0
         );
 
-        // Create the NPC
         $npc = new Human($location, $skin);
         $npc->setNameTag("§aHello, Steve!");
         $npc->setNameTagVisible(true);
         $npc->setNameTagAlwaysVisible(true);
-        $npc->setImmobile(true); // Optional: stop it from walking off
 
-        // Add to world and show to player
-        $world->addEntity($npc);
-        $npc->spawnTo($player);
+        // Just don't give it AI or movement controls; it’ll stay put
+        $world->addEntity($npc); // Important: Adds it to the world
+        $npc->spawnTo($player);  // Spawns it for the player
     }
 }
