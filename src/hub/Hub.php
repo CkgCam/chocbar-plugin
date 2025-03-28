@@ -49,24 +49,22 @@ class Hub implements Listener {
         $this->plugin->getLogger()->info(TextFormat::GREEN . "Time locked to midday in Hub worlds.");
     }
 
-    public function onPlayerJoin(Player $player): void {
+    public function onPlayerJoinEvent(PlayerJoinEvent $event): void {
+        $player = $event->getPlayer();
         $world = $this->plugin->getServer()->getWorldManager()->getWorldByName("hub");
 
         if ($world !== null) {
-            // Optionally teleport player to hub spawn
             $player->teleport($world->getSpawnLocation());
 
-            // Set the boss bar
             $this->bossBarManager->showBossBar($player, "§bChocbar Hub | §7/menu for more");
 
-            // Spawn NPC at specific coords
-            $position = new Vector3(3, 32, -2); // Replace with actual hub coords
+            $position = new Vector3(25, 65, 45); // Replace with your actual coordinates
             $this->plugin->getNpcSystem()?->spawnHubNPC($player, $world, $position);
-
         } else {
             $this->plugin->getLogger()->warning("Hub world is not loaded!");
         }
     }
+
 
 
 

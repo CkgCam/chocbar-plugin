@@ -37,15 +37,16 @@ class EventListener implements Listener {
     public function onPlayerJoin(PlayerJoinEvent $event): void {
         $player = $event->getPlayer();
 
-        $this->plugin->getLogger()->info("EventListener: Player joined: " . $player->getName());
+        $this->plugin->getLogger()->info("[chocbar] EventListener: Player joined: " . $player->getName());
 
         if ($this->plugin->getServerType() === "hub") {
             $hub = $this->plugin->getHub();
             if ($hub !== null) {
-                $hub->onPlayerJoin($event);
+                $hub->onPlayerJoinEvent($event); // ✅ call the updated method
             }
         }
     }
+
 
     // Block Ticking Disabled Events
     public function onBlockUpdate(BlockUpdateEvent $event): void {}
