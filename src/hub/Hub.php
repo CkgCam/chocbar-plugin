@@ -47,7 +47,7 @@ class Hub {
         $this->plugin->getLogger()->info(TextFormat::GREEN . "Time locked to midday in Hub worlds.");
     }
 
-    public function onPlayerJoin(Player $player): void {
+    public function WhenPlayerJoins(Player $player): void {
         $world = $this->plugin->getServer()->getWorldManager()->getWorldByName("hub");
 
         if ($world !== null) {
