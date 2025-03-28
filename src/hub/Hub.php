@@ -49,8 +49,7 @@ class Hub implements Listener {
         $this->plugin->getLogger()->info(TextFormat::GREEN . "Time locked to midday in Hub worlds.");
     }
 
-    public function onPlayerJoinEvent(PlayerJoinEvent $event): void {
-        $player = $event->getPlayer();
+    public function onPlayerJoin(Player $player): void {
         $world = $this->plugin->getServer()->getWorldManager()->getWorldByName("hub");
 
         if ($world !== null) {
