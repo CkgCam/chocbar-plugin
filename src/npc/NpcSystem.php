@@ -11,6 +11,7 @@ use pocketmine\entity\Location;
 use pocketmine\player\Player;
 use pocketmine\world\World;
 use pocketmine\utils\Utils;
+use ckgcam\chocbar\npc\HumanNPC;
 
 class NpcSystem {
 
@@ -35,7 +36,7 @@ class NpcSystem {
 
         $skin = $this->loadSkin("test") ?? new Skin("fallback", str_repeat("\x00", 8192));
         $location = new Location($position->getX(), $position->getY(), $position->getZ(), $world, 0, 0);
-        $npc = new Human($location, $skin);
+        $npc = new HumanNPC($location, $skin);
 
         $npc->setNameTag("§aHello, Steve!");
         $npc->setNameTagVisible(true);
