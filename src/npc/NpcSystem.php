@@ -14,23 +14,25 @@ use pocketmine\world\World;
 class NpcSystem {
 
     private Main $plugin;
-    public array $spawnedFor = []; // Track players to prevent duplicate spawning
+
+    /** @var array<string, Human> */
+    private array $spawnedNpcs = [];
 
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
     }
 
-    private ?Human $hubNpc = null;
+    public function spawnHubNPC(Player $player, World $world, Vector3 $position): void {
+        $name = $player->getName();
 
-    public function spawnHubNPC(World $world, Vector3 $position): void {
-        if ($this->hubNpc !== null && !$this->hubNpc->isClosed()) {
-            $this->plugin->getLogger()->info("Hub NPC already exists.");
+        if (isset($this->spawnedNpcs[$name]) && !$this->spawnedNpcs[$name]->isClosed()) {
+            $this->plugin->getLogger()->info("[chocbar] NPC already spawned for $name");
             return;
         }
 
-        $this->plugin->getLogger()->info("Spawning new hub NPC...");
+        $this->plugin->getLogger()->info("[chocbar] Spawning NPC for $name");
 
-        $skin = new Skin("Standard_Custom", str_repeat("\x00", 8192));
+        $skin = new Skin("Standard_Custom", str_repeat("\x00", 8192)); // default Steve skin
         $location = new Location($position->getX(), $position->getY(), $position->getZ(), $world, 0, 0);
         $npc = new Human($location, $skin);
 
@@ -38,8 +40,9 @@ class NpcSystem {
         $npc->setNameTagVisible(true);
         $npc->setNameTagAlwaysVisible(true);
 
-        $world->addEntity($npc); // spawns for all players nearby
-        $this->hubNpc = $npc;
+        $npc->spawnTo($player); // only show to that player
+
+        $this->spawnedNpcs[$name] = $npc;
     }
 
 
