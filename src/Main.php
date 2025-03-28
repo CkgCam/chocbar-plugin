@@ -36,10 +36,6 @@ class Main extends PluginBase {
         $this->saveDefaultConfig();
         $this->servertype = strtolower($this->getConfig()->get("server-type", "hub"));
 
-        // Register protocol support
-        $this->getServer()->getPluginManager()->registerEvents(new ProtocolBypassListener(), $this);
-        $this->getLogger()->info("Protocol bypass enabled for protocol version 786.");
-
         // Register core event listener
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
         $this->getLogger()->info("Registered EventListener ✅");
