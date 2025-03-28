@@ -12,11 +12,14 @@ use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\math\Vector3;
+use ckgcam\chocbar\npc\NpcSystem;
 
 class Hub implements Listener {
 
     private Main $plugin;
     private BossBarManager $bossBarManager;
+
+    private NpcSystem $npcSystem;
 
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
@@ -27,6 +30,10 @@ class Hub implements Listener {
 
     public function setBossBarManager(BossBarManager $bossBarManager): void {
         $this->bossBarManager = $bossBarManager;
+    }
+
+    public function setNpcSystem(NpcSystem $npcSystem): void {
+        $this->npcSystem = $npcSystem;
     }
 
     public function enable(): void {
@@ -42,13 +49,25 @@ class Hub implements Listener {
         $this->plugin->getLogger()->info(TextFormat::GREEN . "Time locked to midday in Hub worlds.");
     }
 
-    public function onPlayerJoin(PlayerJoinEvent $event): void {
-        $player = $event->getPlayer();
+    public function onPlayerJoin(Player $player): void {
+        $world = $this->plugin->getServer()->getWorldManager()->getWorldByName("hub");
 
-        $this->plugin->getLogger()->info("Hub: Player joined: " . $player->getName());
+        if ($world !== null) {
+            // Optionally teleport player to hub spawn
+            $player->teleport($world->getSpawnLocation());
 
-        // Boss bar and NPC stuff here...
+            // Set the boss bar
+            $this->bossBarManager->showBossBar($player, "§bChocbar Hub | §7/menu for more");
+
+            // Spawn NPC at specific coords
+            $position = new Vector3(3, 32, -2); // Replace with actual hub coords
+            $this->plugin->getNpcSystem()?->spawnHubNPC($player, $world, $position);
+
+        } else {
+            $this->plugin->getLogger()->warning("Hub world is not loaded!");
+        }
     }
+
 
 
 }

@@ -59,6 +59,7 @@ class Main extends PluginBase {
         } elseif ($this->servertype === "hub") {
             $this->hub = new Hub($this);
             $this->hub->setBossBarManager($this->bossBarManager);
+            $this->hub->setNpcSystem($this->npcSystem);
             $this->hub->enable();
             $this->blockTickingDisabled = true;
         }
