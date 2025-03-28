@@ -9,6 +9,9 @@ use pocketmine\entity\Skin;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use pocketmine\world\World;
+use pocketmine\entity\Location;
+use pocketmine\world\Position;
+
 
 class NpcSystem
 {
@@ -22,14 +25,18 @@ class NpcSystem
     public function spawnHubNPC(Player $player, World $world, Vector3 $position): void {
         $this->plugin->getLogger()->info("Spawning NPC for " . $player->getName());
 
-        // Using a blank skin - optional: load from file instead
-        $skin = new Skin("Standard_Custom", str_repeat("\x00", 8192)); // fake 64x32 skin
+        // Fake Steve skin (replace later with real one)
+        $skin = new Skin("Standard_Custom", str_repeat("\x00", 8192));
 
-        $nbt = Human::createBaseNBT($position);
-        $npc = new Human($world, $nbt, $skin);
+        // Create the entity with proper Location
+        $location = new Location($position->getX(), $position->getY(), $position->getZ(), $world, 0, 0);
+
+        $npc = new Human($location, $skin);
         $npc->setNameTag("§aHello, Steve!");
         $npc->setNameTagVisible(true);
         $npc->setNameTagAlwaysVisible(true);
+
+        // Spawn only to the player for now
         $npc->spawnTo($player);
     }
 }
