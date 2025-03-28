@@ -52,7 +52,7 @@ class Hub {
 
             $this->bossBarManager->showBossBar($player, "§bChocbar Hub | §7/menu for more");
 
-            $position = new Vector3(25, 65, 45); // Replace with your actual coordinates
+            $position = new Vector3(0.52, 30, -37.44); // Replace with your actual coordinates
             $this->plugin->getNpcSystem()?->spawnHubNPC($player, $world, $position);
         } else {
             $this->plugin->getLogger()->warning("Hub world is not loaded!");
