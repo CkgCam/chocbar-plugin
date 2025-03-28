@@ -10,6 +10,7 @@ use pocketmine\math\Vector3;
 use pocketmine\entity\Location;
 use pocketmine\player\Player;
 use pocketmine\world\World;
+use pocketmine\utils\Utils;
 
 class NpcSystem {
 
@@ -32,7 +33,7 @@ class NpcSystem {
 
         $this->plugin->getLogger()->info("[chocbar] Spawning NPC for $name");
 
-        $skin = new Skin("Standard_Custom", str_repeat("\x00", 8192)); // default Steve skin
+        $skin = $this->loadSkin("test") ?? new Skin("fallback", str_repeat("\x00", 8192));
         $location = new Location($position->getX(), $position->getY(), $position->getZ(), $world, 0, 0);
         $npc = new Human($location, $skin);
 
@@ -56,6 +57,46 @@ class NpcSystem {
             unset($this->spawnedNpcs[$name]); // free memory
             $this->plugin->getLogger()->info("[chocbar] Despawned NPC for $name");
         }
+    }
+
+    public function loadSkin(string $name): ?Skin {
+        $path = $this->plugin->getDataFolder() . "skins/" . $name . ".png";
+
+        if (!file_exists($path)) {
+            $this->plugin->getLogger()->warning("Skin file not found at $path");
+            return null;
+        }
+
+        $skinBytes = @file_get_contents($path);
+        if ($skinBytes === false) {
+            $this->plugin->getLogger()->warning("Failed to read skin file $path");
+            return null;
+        }
+
+        $skinImage = @imagecreatefrompng($path);
+        if ($skinImage === false) {
+            $this->plugin->getLogger()->warning("Failed to create image from $path");
+            return null;
+        }
+
+        $width = imagesx($skinImage);
+        $height = imagesy($skinImage);
+
+        $skinData = "";
+        for ($y = 0; $y < $height; ++$y) {
+            for ($x = 0; $x < $width; ++$x) {
+                $color = imagecolorat($skinImage, $x, $y);
+                $a = 127 - (($color >> 24) & 0x7F);
+                $r = ($color >> 16) & 0xFF;
+                $g = ($color >> 8) & 0xFF;
+                $b = $color & 0xFF;
+                $skinData .= chr($r) . chr($g) . chr($b) . chr($a);
+            }
+        }
+
+        imagedestroy($skinImage);
+
+        return new Skin("custom.skin", $skinData);
     }
 
 
