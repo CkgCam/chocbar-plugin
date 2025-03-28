@@ -6,15 +6,13 @@ namespace ckgcam\chocbar\hub;
 
 use ckgcam\chocbar\bossbar\BossBarManager;
 use ckgcam\chocbar\Main;
-use pocketmine\event\Listener;
-use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\math\Vector3;
 use ckgcam\chocbar\npc\NpcSystem;
 
-class Hub implements Listener {
+class Hub {
 
     private Main $plugin;
     private BossBarManager $bossBarManager;
