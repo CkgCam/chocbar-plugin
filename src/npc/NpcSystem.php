@@ -30,17 +30,24 @@ class NpcSystem {
 
         $this->plugin->getLogger()->info("[chocbar] Spawning NPC for $name");
 
-        $skin = $player->getSkin(); // use player's skin
-        $location = new Location($position->getX(), $position->getY(), $position->getZ(), $world, 0.0, 0.0);
-        $npc = new Human($location, $skin);
+        $skin = $player->getSkin();
+        $location = new Location(
+            $position->getX(),
+            $position->getY(),
+            $position->getZ(),
+            $world,
+            0.0, 0.0
+        );
 
+        $npc = new Human($location, $skin);
         $npc->setNameTag("§aHello, Steve!");
         $npc->setNameTagVisible(true);
         $npc->setNameTagAlwaysVisible();
 
-        $world->addEntity($npc);
+        // ❗ DON'T call addEntity() + spawnTo(), just spawnTo()
         $npc->spawnTo($player);
 
         $this->spawnedFor[$name] = true;
     }
+
 }
