@@ -47,6 +47,11 @@ class EventListener implements Listener {
         }
     }
 
+    public function onPlayerQuit(PlayerQuitEvent $event): void {
+        unset($this->plugin->getNpcSystem()->spawnedFor[$event->getPlayer()->getName()]);
+    }
+
+
 
     // Block Ticking Disabled Events
     public function onBlockUpdate(BlockUpdateEvent $event): void {}

@@ -14,37 +14,33 @@ use pocketmine\world\World;
 class NpcSystem {
 
     private Main $plugin;
+    public array $spawnedFor = []; // Track players to prevent duplicate spawning
 
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
     }
 
     public function spawnHubNPC(Player $player, World $world, Vector3 $position): void {
-        $this->plugin->getLogger()->info("[chocbar] Spawning NPC for " . $player->getName());
+        $name = $player->getName();
 
-        // Grab player's skin for now (just for testing)
-        $skin = $player->getSkin();
+        if (isset($this->spawnedFor[$name])) {
+            $this->plugin->getLogger()->info("[chocbar] NPC already spawned for $name, skipping.");
+            return;
+        }
 
-        // Create Location
-        $location = new Location(
-            $position->getX(),
-            $position->getY(),
-            $position->getZ(),
-            $world,
-            0.0, // yaw
-            0.0  // pitch
-        );
+        $this->plugin->getLogger()->info("[chocbar] Spawning NPC for $name");
 
-        // Create NPC entity
+        $skin = $player->getSkin(); // use player's skin
+        $location = new Location($position->getX(), $position->getY(), $position->getZ(), $world, 0.0, 0.0);
         $npc = new Human($location, $skin);
+
         $npc->setNameTag("§aHello, Steve!");
         $npc->setNameTagVisible(true);
         $npc->setNameTagAlwaysVisible();
 
-        // Add entity to world
         $world->addEntity($npc);
-
-        // Make visible to player
         $npc->spawnTo($player);
+
+        $this->spawnedFor[$name] = true;
     }
 }
