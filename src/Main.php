@@ -38,6 +38,12 @@ class Main extends PluginBase {
     private string $servertype;
     private bool $blockTickingDisabled = false;
 
+    private function Logger(String $message): void
+    {
+        $this->plugin->getLogger()->info(TextFormat::DARK_PURPLE."[Main]" . TextFormat::GREEN . "|" . TextFormat::WHITE . "[" . $message . "]");
+    }
+
+
     public function onEnable(): void {
         $this->saveDefaultConfig();
         $this->saveResource("skins/test.png");
@@ -45,7 +51,7 @@ class Main extends PluginBase {
 
         // Register core event listener
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
-        $this->getLogger()->info("Registered EventListener ✅");
+        $this->Logger("Registered EventListener");
 
         // Initialize core managers
         $this->hotbarManager = new HotbarMenuManager($this);
@@ -121,14 +127,14 @@ class Main extends PluginBase {
     }
 
     public function onNpcTapped(Player $player, string $npcId): void {
-        // Example usage
-        if ($npcId === "you tapped survival") {
-            $player->sendMessage("§eYou tapped the shop NPC!");
-            // You can open a shop form or trigger other logic here
-        }
-        else
-        {
-            $player->sendMessage("§i dont do anything");
+        $this->Logger("Received NPC Tap");
+
+        switch ($npcId) {
+            case "survival":
+                $this->Logger("Opening Survival Join Form...");
+                break;
+                    default:
+                        $this->Logger("This NPC Tap Is Not Binded");
         }
 
     }
