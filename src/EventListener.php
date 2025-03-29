@@ -36,10 +36,14 @@ class EventListener implements Listener {
         $this->plugin = $plugin;
     }
 
+    private function Logger(String $message): void
+    {
+        $this->plugin->getLogger()->info("[Chocbar] [Event Listener] | [" . $message . "]");
+    }
+
     public function onPlayerJoin(PlayerJoinEvent $event): void {
         $player = $event->getPlayer();
-
-        $this->plugin->getLogger()->info("[chocbar] EventListener: Player joined: " . $player->getName());
+        $this->Logger( "Player joined: " . $player->getName());
 
         if ($this->plugin->getServerType() === "hub") {
             $hub = $this->plugin->getHub();
@@ -51,6 +55,7 @@ class EventListener implements Listener {
 
     public function onPlayerQuit(PlayerQuitEvent $event): void {
         $player = $event->getPlayer();
+        $this->Logger( "Player quit: " . $player->getName());
 
         if ($this->plugin->getServerType() === "hub") {
             $hub = $this->plugin->getHub();
@@ -61,18 +66,29 @@ class EventListener implements Listener {
     }
 
     public function onNpcTap(EntityDamageByEntityEvent $event): void {
-        $this->plugin->getLogger()->info("enity damage event fired");
+        $this->Logger("entity damage event fired");
         $damager = $event->getDamager();
         $entity = $event->getEntity();
-        $this->plugin->getLogger()->info($entity->getNameTag());
+        $this->Logger("Damager NameTag: " . $damager->getNameTag() . "enity NameTag: " . $entity->getNameTag());
 
-        if (!$damager instanceof Player) return;
-        if (!$entity instanceof Human) return; // <-- use Human if you're only targeting Human-type NPCs
+        if (!$damager instanceof Player){
+            $this->Logger("Damager Is Not An Instance Of Player");
+            return;
+        }
+        if (!$entity instanceof Human){
+            $this->Logger("Damager Is Not An Instance Of Human");$this->Logger("Damager Is Not An Instance Of Human");
+            return; // <-- use Human if you're only targeting Human-type NPCs
+        }
 
         $id = $entity->getNetworkProperties()->getString(100, null);
         if ($id !== null) {
+            $this->Logger("Damager has id cancelling damage event");
             $event->cancel(); // block damage
+            $this->Logger("Passing info of tapped npc to main");
             $this->plugin->onNpcTapped($damager, $id); // trigger hook
+        }
+        else{
+            $this->Logger("Damager Dose Not Have an id");
         }
     }
 
