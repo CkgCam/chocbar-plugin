@@ -37,9 +37,9 @@ class NpcSystem {
         $this->Logger("Spawning NPC For Player: ".
             $name .
         " At World: " .
-        $world .
+        $world->getDisplayName() .
         " With Cords: " .
-        $position .
+            $position->getX() . " " . $position->getY() . " " . $position->getZ() .
         " | Nametag: " .
             $nametag .
             " | NPCId: " .
