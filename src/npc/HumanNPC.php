@@ -11,6 +11,17 @@ use pocketmine\nbt\tag\CompoundTag;
 
 class HumanNPC extends Human {
 
+    private string $npcId = "";
+
+    public function setNpcId(string $id): void {
+        $this->npcId = $id;
+    }
+
+    public function getNpcId(): string {
+        return $this->npcId;
+    }
+
+
     protected function getInitialSizeInfo(): EntitySizeInfo {
         return new EntitySizeInfo(1.8, 0.6);
     }

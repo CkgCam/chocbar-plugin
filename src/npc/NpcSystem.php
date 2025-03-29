@@ -46,11 +46,10 @@ class NpcSystem {
         $skin = $this->loadSkin("test") ?? new Skin("fallback", str_repeat("\x00", 8192));
         $location = new Location($position->getX(), $position->getY(), $position->getZ(), $world, 0.0, 0.0);
 
-        $this->Logger("Creating NBT with npc_id: $npcId");
-        $nbt = CompoundTag::create()->setString("npc_id", $npcId);
-
         $this->Logger("Instantiating HumanNPC...");
-        $npc = new HumanNPC($location, $skin, $nbt);
+        $npc = new HumanNPC($location, $skin);
+        $this->Logger("Setting new npc's id");
+        $npc->setNpcId($npcId);
 
         $npc->setNameTag($nametag);
         $npc->setNameTagVisible(true);

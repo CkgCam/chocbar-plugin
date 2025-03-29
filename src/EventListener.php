@@ -81,19 +81,16 @@ class EventListener implements Listener {
             return;
         }
 
-        if (
-            $entity instanceof HumanNPC &&
-            $entity->getNamedTag()->getTag("npc_id") !== null
-        )
+        if ($entity instanceof HumanNPC)
         {
-            $id = $entity->getNamedTag()->getString("npc_id");
-            $this->Logger("Entity is an NPC | NPC id is: " . $id);
-            $event->cancel();
-            $this->plugin->onNpcTapped($damager, $id);
+        $npcId = $entity->getNpcId();
+        $event->cancel();
+        $this->Logger("Player Tapped Npc With ID: " . $npcId . " Cancelled Dmage Event On NPC");
+        $this->plugin->onNpcTapped($damager, $npcId);
         }
         else
         {
-            $this->Logger("Entity is NOT a NPC or has missing npc_id value in nbt");
+            $this->Logger("Not An NPC");
         }
 
 
