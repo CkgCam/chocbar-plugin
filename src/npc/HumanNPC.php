@@ -20,10 +20,6 @@ class HumanNPC extends Human {
         $this->setCanSaveWithChunk(false); // Don't save NPCs to world
     }
 
-    public function attack(EntityDamageEvent $source): void {
-        $source->cancel(); // Can't take damage
-    }
-
     public function onUpdate(int $currentTick): bool {
         // Cancel movement every tick
         $this->setMotion(Vector3::zero());
