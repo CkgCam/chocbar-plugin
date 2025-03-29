@@ -35,7 +35,7 @@ class HotbarMenuManager
     public function ApplyHotbar(Player $player, array $slots): void
     {
         $name = $player->getName();
-        $this->Logger("Applying hotbar");
+        $this->Logger("Applying hotbar for {$name}");
 
         $inventory = $player->getInventory();
         $inventory->clearAll();
@@ -44,6 +44,8 @@ class HotbarMenuManager
             $Currentslot = $slots[$i] ?? null;
 
             if ($Currentslot !== null) {
+                $this->Logger("Slot {$i}: " . json_encode($Currentslot));
+
                 $item = $this->getItemFromName($Currentslot["item"]);
                 $item->setCustomName("§r" . $Currentslot["name"]);
 
@@ -52,7 +54,11 @@ class HotbarMenuManager
                 $inventory->setItem($i, VanillaItems::AIR());
             }
         }
+
+        // Force inventory update just in case
+        $inventory->sendContents($player);
     }
+
 
     public function RemoveHotbar(Player $player): void
     {
