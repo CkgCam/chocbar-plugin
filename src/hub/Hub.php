@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace ckgcam\chocbar\hub;
 
-use ckgcam\chocbar\Main;
 use ckgcam\chocbar\bossbar\BossBarManager;
+use ckgcam\chocbar\Main;
+use pocketmine\player\Player;
+use pocketmine\utils\TextFormat;
+use pocketmine\scheduler\ClosureTask;
+use pocketmine\math\Vector3;
 use ckgcam\chocbar\npc\NpcSystem;
 use ckgcam\chocbar\HotbarMenu\HotbarMenuManager;
 use ckgcam\chocbar\HotbarMenu\Hotbars\HubHotbar;
-use pocketmine\math\Vector3;
-use pocketmine\player\Player;
-use pocketmine\scheduler\ClosureTask;
-use pocketmine\utils\TextFormat;
 
 class Hub {
 
@@ -30,9 +30,9 @@ class Hub {
     }
 
     public function enable(): void {
-        $this->npcSystem = $this->plugin->getNpcSystem();
-        $this->bossBarManager = $this->plugin->getBossBarManager();
-        $this->hotbarMenuManager = $this->plugin->getHotbarMenuManager();
+        $this->npcSystem = $this->plugin->getScript("NpcSystem");
+        $this->bossBarManager = $this->plugin->getScript("BossBarManager");
+        $this->hotbarMenuManager = $this->plugin->getScript("HotbarMenuManager");
 
         $this->plugin->getScheduler()->scheduleRepeatingTask(new ClosureTask(function (): void {
             foreach ($this->plugin->getServer()->getWorldManager()->getWorlds() as $world) {
