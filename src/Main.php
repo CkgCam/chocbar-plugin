@@ -76,14 +76,11 @@ class Main extends PluginBase {
             $this->hub->enable();
             $this->blockTickingDisabled = true;
         }
-
-
-        $this->getLogger()->info("Custom NPC entity registered!");
-        $this->getLogger()->info(TextFormat::GREEN . "chocbar lib loaded!");
+        $this->Logger("chocbar lib loaded!");
     }
 
     public function onDisable(): void {
-        $this->getLogger()->info(TextFormat::RED . "chocbar lib shutting down!");
+        $this->Logger("chocbar lib shutting down!");
     }
 
     // Getters
