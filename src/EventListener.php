@@ -26,6 +26,7 @@ use pocketmine\block\Farmland;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\world\World;
 use pocketmine\player\Player;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 
 class EventListener implements Listener {
 
