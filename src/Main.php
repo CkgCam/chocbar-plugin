@@ -71,8 +71,6 @@ class Main extends PluginBase {
             $this->blockTickingDisabled = false;
         } elseif ($this->servertype === "hub") {
             $this->hub = new Hub($this);
-            $this->hub->setBossBarManager($this->bossBarManager);
-            $this->hub->setNpcSystem($this->npcSystem);
             $this->hub->enable();
             $this->blockTickingDisabled = true;
         }
@@ -86,6 +84,30 @@ class Main extends PluginBase {
     // Getters
     public function getSurvival(): ?Survival {
         return $this->survival;
+    }
+
+    public function getScript(String $type)
+    {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+        $caller = $trace[1];
+
+        $callerClass = $caller['class'] ?? 'UnknownClass';
+        $callerFunction = $caller['function'] ?? 'UnknownFunction';
+
+        $this->Logger("Script is asking for another scripts ref: " . $callerClass::$callerFunction);
+
+        switch ($type) {
+            case "NpcSystem":
+                return $this->npcSystem;
+                case "hub":
+                    return $this->hub;
+                    case "BossBarManager":
+                        return $this->bossBarManager;
+                        case "HotbarMenuManager":
+                            return $this->hotbarManager;
+                    default:
+                        return null;
+        }
     }
 
     public function getHub(): ?Hub {

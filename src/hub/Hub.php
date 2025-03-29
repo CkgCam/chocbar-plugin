@@ -11,6 +11,7 @@ use pocketmine\utils\TextFormat;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\math\Vector3;
 use ckgcam\chocbar\npc\NpcSystem;
+use ckgcam\chocbar\HotbarMenu\HotbarMenuManager;
 
 class Hub {
 
@@ -18,6 +19,8 @@ class Hub {
     private BossBarManager $bossBarManager;
 
     private NpcSystem $npcSystem;
+
+    private HotbarMenuManager $hotbarMenuManager;
 
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
@@ -27,16 +30,25 @@ class Hub {
         $this->plugin->getLogger()->info(TextFormat::YELLOW."[Hub]" . TextFormat::GREEN . "|" . TextFormat::WHITE . "[" . $message . "]");
     }
 
-    public function setBossBarManager(BossBarManager $bossBarManager): void {
-        $this->bossBarManager = $bossBarManager;
-    }
 
-    public function setNpcSystem(NpcSystem $npcSystem): void {
-        $this->npcSystem = $npcSystem;
-    }
 
     public function enable(): void {
-        $this->Logger("chocbar Hub Manager loaded!");
+
+        //Get Needed Managers
+        if($this->plugin->getScript("NpcSystem") != null)
+        {
+            $this->npcSystem = $this->plugin->getScript("NpcSystem");
+        }
+
+        if($this->plugin->getScript("BossBarManager") != null)
+        {
+            $this->bossBarManager = $this->plugin->getScript("BossBarManager");
+        }
+
+        if($this->plugin->getScript("HotbarMenuManager") != null)
+        {
+            $this->hotbarMenuManager = $this->plugin->getScript("HotbarMenuManager");
+        }
 
         $this->plugin->getScheduler()->scheduleRepeatingTask(new ClosureTask(function (): void {
             foreach ($this->plugin->getServer()->getWorldManager()->getWorlds() as $world) {
@@ -63,6 +75,8 @@ class Hub {
         } else {
             $this->plugin->getLogger()->warning("Hub world is not loaded!");
         }
+
+
     }
 
     public function onPlayerQuitEvent(Player $player): void {
