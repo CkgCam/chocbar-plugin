@@ -67,10 +67,10 @@ class EventListener implements Listener {
         if (!$damager instanceof Player) return;
         if (!$entity instanceof Living) return;
 
-        $npcId = $entity->getNetworkProperties()->getString("custom:npc_id", null);
-        if ($npcId !== null) {
+        $id = $entity->getNetworkProperties()->getString(100, null);
+        if ($id !== null) {
             $event->cancel();
-            $this->plugin->onNpcTapped($damager, $npcId);
+            $this->plugin->onNpcTapped($damager, $id);
         }
     }
 

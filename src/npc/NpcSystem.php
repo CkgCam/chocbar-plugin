@@ -41,7 +41,7 @@ class NpcSystem {
         $npc = new HumanNPC($location, $skin);
 
         $npc->setNameTag($nametag);
-        $npc->getNetworkProperties()->setString("custom:npc_id", $npcId);
+        $npc->getNetworkProperties()->setString(100, $npcId); // 100 is a safe custom metadata index
         $npc->setNameTagVisible(true);
         $npc->setNameTagAlwaysVisible(true);
 
