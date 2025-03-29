@@ -54,9 +54,6 @@ class HotbarMenuManager
                 $inventory->setItem($i, VanillaItems::AIR());
             }
         }
-
-        // Force inventory update just in case
-        $inventory->sendContents($player);
     }
 
 
