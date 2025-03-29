@@ -24,6 +24,7 @@ use pocketmine\event\entity\{
 };
 use pocketmine\block\Farmland;
 use pocketmine\block\VanillaBlocks;
+use pocketmine\utils\TextFormat;
 use pocketmine\world\World;
 use pocketmine\player\Player;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -38,7 +39,7 @@ class EventListener implements Listener {
 
     private function Logger(String $message): void
     {
-        $this->plugin->getLogger()->info("[Chocbar] [Event Listener] | [" . $message . "]");
+        $this->plugin->getLogger()->info(TextFormat::AQUA."[Event Listener]" . TextFormat::GREEN . "|" . TextFormat::WHITE . "[" . $message . "]");
     }
 
     public function onPlayerJoin(PlayerJoinEvent $event): void {
@@ -70,6 +71,7 @@ class EventListener implements Listener {
         $damager = $event->getDamager();
         $entity = $event->getEntity();
         $this->Logger("Damager NameTag: " . $damager->getNameTag() . "enity NameTag: " . $entity->getNameTag());
+        $this->Logger("Entity class: " . get_class($entity));
 
         if (!$damager instanceof Player){
             $this->Logger("Damager Is Not An Instance Of Player");
