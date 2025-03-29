@@ -47,16 +47,16 @@ class NpcSystem {
 
         // Check if this specific NPC has already been spawned for the player
         if (isset($this->spawnedNpcs[$name][$npcId]) && !$this->spawnedNpcs[$name][$npcId]->isClosed()) {
-            $this->Logger( "NPC '$npcId' already spawned for $name");
+            $this->Logger( "NPC " . $npcId . " already spawned for" . $name);
             return;
         }
 
-        Logger("Spawning NPC '$npcId' for $name");
+        Logger("Spawning NPC" . $npcId . " for " .$name);
 
         Logger("Loading Skin....");
         $skin = $this->loadSkin("test") ?? new Skin("fallback", str_repeat("\x00", 8192));
         $location = new Location($position->getX(), $position->getY(), $position->getZ(), $world, 0, 0);
-        Logger("Adding Nbt CompoundTag '$npcId' under npc_id");
+        Logger("Adding Nbt CompoundTag " . $npcId . " under npc_id");
         $nbt = CompoundTag::create()->setString("npc_id", $npcId);
         Logger("Creating Npc...");
         $npc = new HumanNPC($location, $skin, $nbt);
