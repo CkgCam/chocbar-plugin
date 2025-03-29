@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ckgcam\chocbar\HotbarMenu\Hotbars;
+namespace ckgcam\chocbar\HotbarMenu;
 
 class HotbarSlot {
     public function __construct(
