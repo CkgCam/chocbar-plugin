@@ -88,13 +88,7 @@ class Main extends PluginBase {
 
     public function getScript(String $type)
     {
-        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-        $caller = $trace[1];
-
-        $callerClass = $caller['class'] ?? 'UnknownClass';
-        $callerFunction = $caller['function'] ?? 'UnknownFunction';
-
-        $this->Logger("Script is asking for another scripts ref: " . $callerClass::$callerFunction);
+        $this->Logger("Script is asking for script:  " . $type);
 
         switch ($type) {
             case "NpcSystem":
