@@ -66,7 +66,7 @@ class Hub {
         if ($this->hotbarMenuManager !== null) {
             $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function() use ($player) {
                 $this->hotbarMenuManager->ApplyHotbar($player, Hotbars::$hub);
-            }), 10); // 10 ticks = 0.5 seconds
+            }), 30); // 10 ticks = 0.5 seconds
         }
     }
 
