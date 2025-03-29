@@ -4,36 +4,37 @@ declare(strict_types=1);
 namespace ckgcam\chocbar\npc;
 
 use ckgcam\chocbar\Main;
-use pocketmine\entity\Human;
 use pocketmine\entity\Skin;
 use pocketmine\math\Vector3;
 use pocketmine\entity\Location;
 use pocketmine\player\Player;
 use pocketmine\world\World;
-use pocketmine\utils\Utils;
 use ckgcam\chocbar\npc\HumanNPC;
-use ckgcam\chocbar\npc\npc_survival; // Make sure this matches your namespace + class
 
 class NpcSystem {
 
     private Main $plugin;
 
-    /** @var array<string, Human> */
+    /**
+     * @var array<string, array<string, HumanNPC>>
+     * Format: $spawnedNpcs[playerName][npcId] = HumanNPC instance
+     */
     private array $spawnedNpcs = [];
 
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
     }
 
-    public function spawnHubNPC(Player $player, World $world, Vector3 $position, String $nametag): void {
+    public function spawnHubNPC(Player $player, World $world, Vector3 $position, string $nametag, string $npcId): void {
         $name = $player->getName();
 
-        if (isset($this->spawnedNpcs[$name]) && !$this->spawnedNpcs[$name]->isClosed()) {
-            $this->plugin->getLogger()->info("[chocbar] NPC already spawned for $name");
+        // Check if this specific NPC has already been spawned for the player
+        if (isset($this->spawnedNpcs[$name][$npcId]) && !$this->spawnedNpcs[$name][$npcId]->isClosed()) {
+            $this->plugin->getLogger()->info("[chocbar] NPC '$npcId' already spawned for $name");
             return;
         }
 
-        $this->plugin->getLogger()->info("[chocbar] Spawning NPC for $name");
+        $this->plugin->getLogger()->info("[chocbar] Spawning NPC '$npcId' for $name");
 
         $skin = $this->loadSkin("test") ?? new Skin("fallback", str_repeat("\x00", 8192));
         $location = new Location($position->getX(), $position->getY(), $position->getZ(), $world, 0, 0);
@@ -43,21 +44,33 @@ class NpcSystem {
         $npc->setNameTagVisible(true);
         $npc->setNameTagAlwaysVisible(true);
 
-        $npc->spawnTo($player); // only show to that player
+        $npc->spawnTo($player);
 
-        $this->spawnedNpcs[$name] = $npc;
+        // Track this NPC by player + id
+        $this->spawnedNpcs[$name][$npcId] = $npc;
     }
 
-    public function despawnHubNPC(Player $player): void {
+    public function despawnHubNPC(Player $player, string $npcId = null): void {
         $name = $player->getName();
 
-        if (isset($this->spawnedNpcs[$name])) {
-            $npc = $this->spawnedNpcs[$name];
-            if (!$npc->isClosed()) {
-                $npc->close(); // remove from the world
+        if ($npcId !== null) {
+            if (isset($this->spawnedNpcs[$name][$npcId])) {
+                $npc = $this->spawnedNpcs[$name][$npcId];
+                if (!$npc->isClosed()) {
+                    $npc->close();
+                }
+                unset($this->spawnedNpcs[$name][$npcId]);
+                $this->plugin->getLogger()->info("[chocbar] Despawned NPC '$npcId' for $name");
             }
-            unset($this->spawnedNpcs[$name]); // free memory
-            $this->plugin->getLogger()->info("[chocbar] Despawned NPC for $name");
+        } else {
+            // Despawn all NPCs for the player
+            foreach ($this->spawnedNpcs[$name] ?? [] as $id => $npc) {
+                if (!$npc->isClosed()) {
+                    $npc->close();
+                }
+                $this->plugin->getLogger()->info("[chocbar] Despawned NPC '$id' for $name");
+            }
+            unset($this->spawnedNpcs[$name]);
         }
     }
 
@@ -66,12 +79,6 @@ class NpcSystem {
 
         if (!file_exists($path)) {
             $this->plugin->getLogger()->warning("Skin file not found at $path");
-            return null;
-        }
-
-        $skinBytes = @file_get_contents($path);
-        if ($skinBytes === false) {
-            $this->plugin->getLogger()->warning("Failed to read skin file $path");
             return null;
         }
 
@@ -100,7 +107,4 @@ class NpcSystem {
 
         return new Skin("custom.skin", $skinData);
     }
-
-
-
 }

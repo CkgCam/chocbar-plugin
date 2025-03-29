@@ -53,9 +53,9 @@ class Hub {
             $this->bossBarManager->showBossBar($player, "§bChocbar Hub | §7/menu for more");
 
             $position = new Vector3(0.52, 30, -37.44); // Replace with your actual coordinates
-            $this->plugin->getNpcSystem()?->spawnHubNPC($player, $world, $position, "Survival Mode");
+            $this->plugin->getNpcSystem()?->spawnHubNPC($player, $world, $position, "Survival Mode", "survival");
             $position = new Vector3(5.5, 30, -36.5); // Replace with your actual coordinates
-            $this->plugin->getNpcSystem()?->spawnHubNPC($player, $world, $position, "Sky Block");
+            $this->plugin->getNpcSystem()?->spawnHubNPC($player, $world, $position, "Sky Block", "skyblock");
         } else {
             $this->plugin->getLogger()->warning("Hub world is not loaded!");
         }
