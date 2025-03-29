@@ -12,7 +12,7 @@ use pocketmine\scheduler\ClosureTask;
 use pocketmine\math\Vector3;
 use ckgcam\chocbar\npc\NpcSystem;
 use ckgcam\chocbar\HotbarMenu\HotbarMenuManager;
-use ckgcam\chocbar\HotbarMenu\Hotbars\HubHotbar;
+use ckgcam\chocbar\HotbarMenu\Hotbars;
 
 class Hub {
 
@@ -63,7 +63,7 @@ class Hub {
         }
 
         if ($this->hotbarMenuManager !== null) {
-            $this->hotbarMenuManager->ApplyHotbar($player, new HubHotbar());
+            $this->hotbarMenuManager->ApplyHotbar($player, Hotbars::$hub);
         }
     }
 

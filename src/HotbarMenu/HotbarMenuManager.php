@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace ckgcam\chocbar\HotbarMenu;
 
-use pocketmine\item\ItemFactory;
 use pocketmine\item\VanillaItems;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use pocketmine\item\enchantment\Enchantments;
 use pocketmine\item\enchantment\EnchantmentInstance;
+use pocketmine\item\Item;
 use ckgcam\chocbar\HotbarMenu\Hotbars;
-use ckgcam\chocbar\HotbarMenu\HotbarSlot;
 
 class HotbarMenuManager
 {
@@ -35,31 +34,25 @@ class HotbarMenuManager
         $this->Logger("Hotbar Menu loaded");
     }
 
-    public function ApplyHotbar(Player $player, Hotbars $hotbar): void
+    public function ApplyHotbar(Player $player, array $slots): void
     {
         $name = $player->getName();
-        $this->Logger("Applying hotbar to {$name}");
+        $this->Logger("Applying hotbar");
 
-        $this->activeHotbars[$name] = $hotbar;
         $inventory = $player->getInventory();
         $inventory->clearAll();
 
-        $slots = $hotbar->getSlots();
-
         for ($i = 0; $i < 9; $i++) {
-            $slot = $slots[$i] ?? null;
+            $Currentslot = $slots[$i] ?? null;
 
-            if ($slot instanceof HotbarSlot) {
-                $item = ItemFactory::getInstance()->get($slot->itemId);
-                $item->setCustomName("§r" . $slot->name);
+            if ($Currentslot !== null) {
+                $item = $this->getItemFromName($Currentslot["item"]);
+                $item->setCustomName("§r" . $Currentslot["name"]);
 
-                if ($slot->enchanted) {
+                if (!empty($Currentslot["enchanted"])) {
                     $dummyEnchant = Enchantments::UNBREAKING();
                     $item->addEnchantment(new EnchantmentInstance($dummyEnchant, 1));
                 }
-
-                // Optionally store action ID in lore for debugging or lookup
-                $item->setLore(["§7Action ID: " . $slot->actionId]);
 
                 $inventory->setItem($i, $item);
             } else {
@@ -77,8 +70,22 @@ class HotbarMenuManager
         $this->Logger("Removed hotbar for {$name}");
     }
 
-    public function GetActiveHotbar(Player $player): ?Hotbars
+    public function GetActiveHotbar(Player $player): void
     {
-        return $this->activeHotbars[$player->getName()] ?? null;
+        // Your logic here
+    }
+
+    private function getItemFromName(string $name): Item
+    {
+        // Normalize to uppercase and underscores
+        $method = strtoupper($name);
+        $method = str_replace(" ", "_", $method);
+
+        if (method_exists(VanillaItems::class, $method)) {
+            return VanillaItems::$method();
+        }
+
+        // Default to AIR if not found
+        return VanillaItems::AIR();
     }
 }
