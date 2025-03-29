@@ -71,6 +71,7 @@ class Main extends PluginBase {
             $this->blockTickingDisabled = false;
         } elseif ($this->servertype === "hub") {
             $this->hub = new Hub($this);
+            $this->hub->enable();
             $this->blockTickingDisabled = true;
         }
         $this->Logger("chocbar lib loaded!");
@@ -87,7 +88,6 @@ class Main extends PluginBase {
 
     public function getScript(String $type)
     {
-        $this->Logger("Script is asking for script:  " . $type);
 
         switch ($type) {
             case "NpcSystem":

@@ -50,7 +50,7 @@ class EventListener implements Listener {
         if ($this->plugin->getServerType() === "hub") {
             $hub = $this->plugin->getHub();
             if ($hub !== null) {
-                $hub->WhenPlayerJoins($player); // ✅ call the updated method
+                $hub->OnPlayerJoin($player); // ✅ call the updated method
             }
         }
     }

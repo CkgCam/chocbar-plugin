@@ -4,51 +4,35 @@ declare(strict_types=1);
 
 namespace ckgcam\chocbar\hub;
 
-use ckgcam\chocbar\bossbar\BossBarManager;
 use ckgcam\chocbar\Main;
-use pocketmine\player\Player;
-use pocketmine\utils\TextFormat;
-use pocketmine\scheduler\ClosureTask;
-use pocketmine\math\Vector3;
+use ckgcam\chocbar\bossbar\BossBarManager;
 use ckgcam\chocbar\npc\NpcSystem;
 use ckgcam\chocbar\HotbarMenu\HotbarMenuManager;
+use ckgcam\chocbar\HotbarMenu\Hotbars\HubHotbar;
+use pocketmine\math\Vector3;
+use pocketmine\player\Player;
+use pocketmine\scheduler\ClosureTask;
+use pocketmine\utils\TextFormat;
 
 class Hub {
 
     private Main $plugin;
-    private BossBarManager $bossBarManager;
-
-    private NpcSystem $npcSystem;
-
-    private HotbarMenuManager $hotbarMenuManager;
+    private ?BossBarManager $bossBarManager = null;
+    private ?NpcSystem $npcSystem = null;
+    private ?HotbarMenuManager $hotbarMenuManager = null;
 
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
     }
-    private function Logger(String $message): void
-    {
-        $this->plugin->getLogger()->info(TextFormat::YELLOW."[Hub]" . TextFormat::GREEN . "|" . TextFormat::WHITE . "[" . $message . "]");
+
+    private function logger(string $message): void {
+        $this->plugin->getLogger()->info(TextFormat::YELLOW . "[Hub]" . TextFormat::GREEN . "|" . TextFormat::WHITE . "[{$message}]");
     }
 
-
-
     public function enable(): void {
-
-        //Get Needed Managers
-        if($this->plugin->getScript("NpcSystem") != null)
-        {
-            $this->npcSystem = $this->plugin->getScript("NpcSystem");
-        }
-
-        if($this->plugin->getScript("BossBarManager") != null)
-        {
-            $this->bossBarManager = $this->plugin->getScript("BossBarManager");
-        }
-
-        if($this->plugin->getScript("HotbarMenuManager") != null)
-        {
-            $this->hotbarMenuManager = $this->plugin->getScript("HotbarMenuManager");
-        }
+        $this->npcSystem = $this->plugin->getNpcSystem();
+        $this->bossBarManager = $this->plugin->getBossBarManager();
+        $this->hotbarMenuManager = $this->plugin->getHotbarMenuManager();
 
         $this->plugin->getScheduler()->scheduleRepeatingTask(new ClosureTask(function (): void {
             foreach ($this->plugin->getServer()->getWorldManager()->getWorlds() as $world) {
@@ -57,34 +41,35 @@ class Hub {
             }
         }), 100);
 
-        $this->Logger("chocbar Hub Manager loaded!");
+        $this->logger("Hub Manager enabled!");
     }
 
-    public function WhenPlayerJoins(Player $player): void {
+    public function onPlayerJoin(Player $player): void {
         $world = $this->plugin->getServer()->getWorldManager()->getWorldByName("hub");
 
         if ($world !== null) {
             $player->teleport($world->getSpawnLocation());
 
-            $this->bossBarManager->showBossBar($player, "§bChocbar Hub | §7/menu for more");
+            if ($this->bossBarManager !== null) {
+                $this->bossBarManager->showBossBar($player, "§bChocbar Hub | §7/menu for more");
+            }
 
-            $position = new Vector3(0.52, 30, -37.44); // Replace with your actual coordinates
-            $this->plugin->getNpcSystem()?->spawnHubNPC($player, $world, $position, "Survival Mode", "survival");
-            $position = new Vector3(5.5, 30, -36.5); // Replace with your actual coordinates
-            $this->plugin->getNpcSystem()?->spawnHubNPC($player, $world, $position, "Sky Block", "skyblock");
+            if ($this->npcSystem !== null) {
+                $this->npcSystem->spawnHubNPC($player, $world, new Vector3(0.52, 30, -37.44), "Survival Mode", "survival");
+                $this->npcSystem->spawnHubNPC($player, $world, new Vector3(5.5, 30, -36.5), "Sky Block", "skyblock");
+            }
         } else {
-            $this->plugin->getLogger()->warning("Hub world is not loaded!");
+            $this->logger("Hub world is not loaded!");
         }
 
-
+        if ($this->hotbarMenuManager !== null) {
+            $this->hotbarMenuManager->ApplyHotbar($player, new HubHotbar());
+        }
     }
 
-    public function onPlayerQuitEvent(Player $player): void {
-        $this->plugin->getNpcSystem()?->despawnHubNPC($player);
+    public function onPlayerQuit(Player $player): void {
+        if ($this->npcSystem !== null) {
+            $this->npcSystem->despawnHubNPC($player);
+        }
     }
-
-
-
-
-
 }
