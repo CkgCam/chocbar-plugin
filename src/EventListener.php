@@ -102,61 +102,48 @@ class EventListener implements Listener {
     // Block Ticking Disabled Events
     public function onBlockUpdate(BlockUpdateEvent $event): void
     {
-        $this->Logger("onBlockUpdate");
+
     }
 
     public function onBlockSpread(BlockSpreadEvent $event): void {
-        $this->Logger("onBlockSpread");
         $source = $event->getSource();
         if ($this->plugin->isBlockTickingDisabled() || $source instanceof \pocketmine\block\Lava || $source instanceof \pocketmine\block\Water) {
             $event->cancel();
-            $this->Logger("onBlockSpread canceled");
         }
     }
 
     public function onLeavesDecay(LeavesDecayEvent $event): void {
-        $this->Logger("onLeavesDecay");
         if ($this->plugin->isBlockTickingDisabled()) {
             $event->cancel();
-            $this->Logger("onLeavesDecay canceled");
         }
     }
 
     public function onBlockBurn(BlockBurnEvent $event): void {
-        $this->Logger("onBlockBurn");
         if ($this->plugin->isBlockTickingDisabled()) {
             $event->cancel();
-            $this->Logger("onBlockBurn canceled");
         }
     }
 
     public function onBlockGrow(BlockGrowEvent $event): void {
-        $this->Logger("onBlockGrow");
         if ($this->plugin->isBlockTickingDisabled()) {
             $event->cancel();
-            $this->Logger("onBlockGrow canceled");
         }
     }
 
     public function onBlockForm(BlockFormEvent $event): void {
-        $this->Logger("onBlockForm");
         if ($this->plugin->isBlockTickingDisabled()) {
             $event->cancel();
-            $this->Logger("onBlockForm canceled");
         }
     }
 
     public function onEntityTrampleFarmland(EntityTrampleFarmlandEvent $event): void {
-        $this->Logger("onEntityTrampleFarmland");
         if ($this->plugin->isBlockTickingDisabled()) {
             $event->cancel();
-            $this->Logger("onEntityTrampleFarmland canceled");
         }
     }
 
     // Explosion Events
     public function onEntityPreExplode(EntityPreExplodeEvent $event): void {
-        $this->Logger("onEntityPreExplode");
         $event->setBlockBreaking(false);
         $entity = $event->getEntity();
         if ($entity !== null) {
