@@ -64,8 +64,8 @@ class Hub {
         }
 
         if ($this->hotbarMenuManager !== null) {
-            Server::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function() use ($player, $hotbarData) {
-                $this->ApplyHotbar($player, $hotbarData);
+            $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function() use ($player) {
+                $this->hotbarMenuManager->ApplyHotbar($player, Hotbars::$hub);
             }), 10); // 10 ticks = 0.5 seconds
         }
     }
