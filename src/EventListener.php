@@ -92,17 +92,6 @@ class EventListener implements Listener {
         {
             $this->Logger("Not An NPC");
         }
-
-
-        $id = $entity->getNetworkProperties()->getString(100, null);
-
-        if ($id !== null) {
-            $this->Logger("Entity has npc_id '$id'. Cancelling damage and triggering hook.");
-            $event->cancel();
-            $this->plugin->onNpcTapped($damager, $id);
-        } else {
-            $this->Logger("Entity does NOT have an npc_id.");
-        }
     }
 
 
