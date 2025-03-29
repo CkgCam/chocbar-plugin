@@ -28,6 +28,7 @@ use pocketmine\utils\TextFormat;
 use pocketmine\world\World;
 use pocketmine\player\Player;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
+use ckgcam\chocbar\npc\HumanNPC;
 
 class EventListener implements Listener {
 
