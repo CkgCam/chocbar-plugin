@@ -12,6 +12,7 @@
   </component>
   <component name="PhpIncludePathManager">
     <include_path>
+      <path value="$USER_HOME$/Desktop/PocketMine-MP" />
       <path value="$pocketmine$" />
     </include_path>
   </component>
