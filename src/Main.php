@@ -71,7 +71,6 @@ class Main extends PluginBase {
             $this->blockTickingDisabled = false;
         } elseif ($this->servertype === "hub") {
             $this->hub = new Hub($this);
-            $this->hub->enable();
             $this->blockTickingDisabled = true;
         }
         $this->Logger("chocbar lib loaded!");
