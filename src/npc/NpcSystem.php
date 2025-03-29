@@ -41,6 +41,7 @@ class NpcSystem {
         $npc = new HumanNPC($location, $skin);
 
         $npc->setNameTag($nametag);
+        $npc->namedtag->setString("npc_id", $npcId); // store ID for tap detection
         $npc->setNameTagVisible(true);
         $npc->setNameTagAlwaysVisible(true);
 

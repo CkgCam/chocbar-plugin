@@ -59,6 +59,23 @@ class EventListener implements Listener {
         }
     }
 
+    public function onNpcTap(EntityDamageByEntityEvent $event): void {
+        $damager = $event->getDamager();
+        $entity = $event->getEntity();
+
+        if (!$damager instanceof Player) return;
+        if (!$entity instanceof Living) return;
+
+        // Check for NPC tag
+        if ($entity->getNamedTag()->getTag("npc_id") !== null) {
+            $npcId = $entity->getNamedTag()->getString("npc_id");
+            $event->cancel(); // prevent damage
+
+            // Trigger your custom hook
+            $this->plugin->onNpcTapped($damager, $npcId);
+        }
+    }
+
 
 
 

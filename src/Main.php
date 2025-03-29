@@ -120,6 +120,20 @@ class Main extends PluginBase {
         };
     }
 
+    public function onNpcTapped(Player $player, string $npcId): void {
+        // Example usage
+        if ($npcId === "you tapped survival") {
+            $player->sendMessage("§eYou tapped the shop NPC!");
+            // You can open a shop form or trigger other logic here
+        }
+        else
+        {
+            $player->sendMessage("§i dont do anything");
+        }
+
+    }
+
+
     public function openGameModeMenu(Player $player): void {
         if ($this->servertype === "survival") {
             $this->formsManager->survivalmenu($player);
