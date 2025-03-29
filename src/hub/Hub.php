@@ -13,6 +13,7 @@ use pocketmine\math\Vector3;
 use ckgcam\chocbar\npc\NpcSystem;
 use ckgcam\chocbar\HotbarMenu\HotbarMenuManager;
 use ckgcam\chocbar\HotbarMenu\Hotbars;
+use pocketmine\Server;
 
 class Hub {
 
@@ -63,7 +64,9 @@ class Hub {
         }
 
         if ($this->hotbarMenuManager !== null) {
-            $this->hotbarMenuManager->ApplyHotbar($player, Hotbars::$hub);
+            Server::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function() use ($player, $hotbarData) {
+                $this->ApplyHotbar($player, $hotbarData);
+            }), 10); // 10 ticks = 0.5 seconds
         }
     }
 
