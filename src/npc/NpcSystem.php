@@ -10,6 +10,7 @@ use pocketmine\entity\Location;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\World;
+use pocketmine\nbt\tag\CompoundTag;
 use ckgcam\chocbar\npc\HumanNPC;
 
 class NpcSystem {
@@ -26,56 +27,43 @@ class NpcSystem {
         $this->plugin = $plugin;
     }
 
-    private function Logger(String $message): void
-    {
-        $this->plugin->getLogger()->info(TextFormat::YELLOW."[NPC System]" . TextFormat::GREEN . "|" . TextFormat::WHITE . "[" . $message . "]");
+    private function Logger(string $message): void {
+        $this->plugin->getLogger()->info(TextFormat::YELLOW . "[NPC System] " . TextFormat::WHITE . $message);
     }
 
     public function spawnHubNPC(Player $player, World $world, Vector3 $position, string $nametag, string $npcId): void {
         $name = $player->getName();
 
-        $this->Logger("Spawning NPC For Player: ".
-            $name .
-        " At World: " .
-        $world->getDisplayName() .
-        " With Cords: " .
-            $position->getX() . " " . $position->getY() . " " . $position->getZ() .
-        " | Nametag: " .
-            $nametag .
-            " | NPCId: " .
-            $npcId);
+        $this->Logger("Spawning NPC For $name at {$world->getDisplayName()} @ {$position->getX()}, {$position->getY()}, {$position->getZ()} | Nametag: $nametag | ID: $npcId");
 
         // Check if this specific NPC has already been spawned for the player
         if (isset($this->spawnedNpcs[$name][$npcId]) && !$this->spawnedNpcs[$name][$npcId]->isClosed()) {
-            $this->Logger( "NPC " . $npcId . " already spawned for" . $name);
+            $this->Logger("NPC '$npcId' already spawned for $name");
             return;
         }
 
-        Logger("Spawning NPC" . $npcId . " for " . $name);
-
-        Logger("Loading Skin....");
+        $this->Logger("Loading skin...");
         $skin = $this->loadSkin("test") ?? new Skin("fallback", str_repeat("\x00", 8192));
-        $location = new Location($position->getX(), $position->getY(), $position->getZ(), $world, 0, 0);
-        Logger("Adding Nbt CompoundTag " . $npcId . " under npc_id");
+        $location = new Location($position->getX(), $position->getY(), $position->getZ(), $world, 0.0, 0.0);
+
+        $this->Logger("Creating NBT with npc_id: $npcId");
         $nbt = CompoundTag::create()->setString("npc_id", $npcId);
-        Logger("Creating Npc...");
+
+        $this->Logger("Instantiating HumanNPC...");
         $npc = new HumanNPC($location, $skin, $nbt);
 
-
-        Logger("Setting NPC NameTag Too: ". $nametag);
         $npc->setNameTag($nametag);
         $npc->setNameTagVisible(true);
         $npc->setNameTagAlwaysVisible(true);
 
-        Logger("SpawnTo: " . $player);
+        $this->Logger("Spawning NPC to player...");
         $npc->spawnTo($player);
 
-        // Track this NPC by player + id
-        Logger("Added [" .  $name . " | " . $npcId . "] To spawnedNpcs List Keeping Track...");
+        $this->Logger("Tracking NPC '$npcId' for $name");
         $this->spawnedNpcs[$name][$npcId] = $npc;
     }
 
-    public function despawnHubNPC(Player $player, string $npcId = null): void {
+    public function despawnHubNPC(Player $player, ?string $npcId = null): void {
         $name = $player->getName();
 
         if ($npcId !== null) {
@@ -85,15 +73,14 @@ class NpcSystem {
                     $npc->close();
                 }
                 unset($this->spawnedNpcs[$name][$npcId]);
-                $this->plugin->getLogger()->info("[chocbar] Despawned NPC '$npcId' for $name");
+                $this->Logger("Despawned NPC '$npcId' for $name");
             }
         } else {
-            // Despawn all NPCs for the player
             foreach ($this->spawnedNpcs[$name] ?? [] as $id => $npc) {
                 if (!$npc->isClosed()) {
                     $npc->close();
                 }
-                $this->plugin->getLogger()->info("[chocbar] Despawned NPC '$id' for $name");
+                $this->Logger("Despawned NPC '$id' for $name");
             }
             unset($this->spawnedNpcs[$name]);
         }
@@ -103,13 +90,13 @@ class NpcSystem {
         $path = $this->plugin->getDataFolder() . "skins/" . $name . ".png";
 
         if (!file_exists($path)) {
-            $this->plugin->getLogger()->warning("Skin file not found at $path");
+            $this->Logger("Skin file not found at $path");
             return null;
         }
 
         $skinImage = @imagecreatefrompng($path);
         if ($skinImage === false) {
-            $this->plugin->getLogger()->warning("Failed to create image from $path");
+            $this->Logger("Failed to create image from $path");
             return null;
         }
 
