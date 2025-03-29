@@ -67,32 +67,35 @@ class EventListener implements Listener {
     }
 
     public function onNpcTap(EntityDamageByEntityEvent $event): void {
-        $this->Logger("entity damage event fired");
+        $this->Logger("EntityDamageByEntityEvent fired");
+
         $damager = $event->getDamager();
         $entity = $event->getEntity();
-        $this->Logger("Damager NameTag: " . $damager->getNameTag() . "enity NameTag: " . $entity->getNameTag());
+
+        $this->Logger("Damager NameTag: {$damager->getNameTag()} | Entity NameTag: {$entity->getNameTag()}");
         $this->Logger("Entity class: " . get_class($entity));
 
-        if (!$damager instanceof Player){
-            $this->Logger("Damager Is Not An Instance Of Player");
+        if (!$damager instanceof Player) {
+            $this->Logger("Damager is NOT a Player");
             return;
         }
-        if (!$entity instanceof Human){
-            $this->Logger("Damager Is Not An Instance Of Human");$this->Logger("Damager Is Not An Instance Of Human");
-            return; // <-- use Human if you're only targeting Human-type NPCs
+
+        if (!$entity instanceof HumanNPC) {
+            $this->Logger("Entity is NOT a HumanNPC");
+            return;
         }
 
         $id = $entity->getNetworkProperties()->getString(100, null);
+
         if ($id !== null) {
-            $this->Logger("Damager has id cancelling damage event");
-            $event->cancel(); // block damage
-            $this->Logger("Passing info of tapped npc to main");
-            $this->plugin->onNpcTapped($damager, $id); // trigger hook
-        }
-        else{
-            $this->Logger("Damager Dose Not Have an id");
+            $this->Logger("Entity has npc_id '$id'. Cancelling damage and triggering hook.");
+            $event->cancel();
+            $this->plugin->onNpcTapped($damager, $id);
+        } else {
+            $this->Logger("Entity does NOT have an npc_id.");
         }
     }
+
 
 
 
