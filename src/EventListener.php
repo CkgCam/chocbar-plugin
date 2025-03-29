@@ -61,8 +61,10 @@ class EventListener implements Listener {
     }
 
     public function onNpcTap(EntityDamageByEntityEvent $event): void {
+        $this->plugin->getLogger()->info("enity damage event fired");
         $damager = $event->getDamager();
         $entity = $event->getEntity();
+        $this->plugin->getLogger()->info($entity->getNameTag());
 
         if (!$damager instanceof Player) return;
         if (!$entity instanceof Human) return; // <-- use Human if you're only targeting Human-type NPCs
