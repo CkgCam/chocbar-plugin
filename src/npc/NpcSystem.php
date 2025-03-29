@@ -35,10 +35,9 @@ class NpcSystem {
 
         $this->plugin->getLogger()->info("[chocbar] Spawning NPC for $name");
 
-        //$skin = $this->loadSkin("test") ?? new Skin("fallback", str_repeat("\x00", 8192));
+        $skin = $this->loadSkin("test") ?? new Skin("fallback", str_repeat("\x00", 8192));
         $location = new Location($position->getX(), $position->getY(), $position->getZ(), $world, 0, 0);
-        //$npc = new npc_survival($location, $skin);
-        $npc = new npc_survival($location);
+        $npc = new HumanNPC($location, $skin);
 
         $npc->setNameTag($nametag);
         $npc->setNameTagVisible(true);

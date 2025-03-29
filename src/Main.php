@@ -71,15 +71,6 @@ class Main extends PluginBase {
             $this->blockTickingDisabled = true;
         }
 
-        // Register custom entity (fixed signature)
-        EntityFactory::getInstance()->register(
-            npc_survival::class,
-            function(World $world, CompoundTag $nbt): npc_survival {
-                return new npc_survival($world, $nbt);
-            },
-            ['chocbar:survival']
-        );
-
 
         $this->getLogger()->info("Custom NPC entity registered!");
         $this->getLogger()->info(TextFormat::GREEN . "chocbar lib loaded!");
