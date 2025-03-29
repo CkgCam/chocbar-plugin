@@ -65,14 +65,15 @@ class EventListener implements Listener {
         $entity = $event->getEntity();
 
         if (!$damager instanceof Player) return;
-        if (!$entity instanceof Living) return;
+        if (!$entity instanceof Human) return; // <-- use Human if you're only targeting Human-type NPCs
 
         $id = $entity->getNetworkProperties()->getString(100, null);
         if ($id !== null) {
-            $event->cancel();
-            $this->plugin->onNpcTapped($damager, $id);
+            $event->cancel(); // block damage
+            $this->plugin->onNpcTapped($damager, $id); // trigger hook
         }
     }
+
 
 
 
