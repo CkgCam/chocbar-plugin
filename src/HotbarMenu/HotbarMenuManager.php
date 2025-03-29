@@ -7,8 +7,6 @@ namespace ckgcam\chocbar\HotbarMenu;
 use pocketmine\item\VanillaItems;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
-use pocketmine\item\enchantment\Enchantments;
-use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\Item;
 use ckgcam\chocbar\HotbarMenu\Hotbars;
 
@@ -48,11 +46,6 @@ class HotbarMenuManager
             if ($Currentslot !== null) {
                 $item = $this->getItemFromName($Currentslot["item"]);
                 $item->setCustomName("§r" . $Currentslot["name"]);
-
-                if (!empty($Currentslot["enchanted"])) {
-                    $dummyEnchant = Enchantments::UNBREAKING();
-                    $item->addEnchantment(new EnchantmentInstance($dummyEnchant, 1));
-                }
 
                 $inventory->setItem($i, $item);
             } else {
