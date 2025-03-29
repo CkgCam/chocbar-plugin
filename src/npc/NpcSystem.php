@@ -51,7 +51,7 @@ class NpcSystem {
             return;
         }
 
-        Logger("Spawning NPC" . $npcId . " for " .$name);
+        Logger("Spawning NPC" . $npcId . " for " . $name);
 
         Logger("Loading Skin....");
         $skin = $this->loadSkin("test") ?? new Skin("fallback", str_repeat("\x00", 8192));
