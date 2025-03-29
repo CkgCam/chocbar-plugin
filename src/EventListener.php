@@ -81,10 +81,21 @@ class EventListener implements Listener {
             return;
         }
 
-        if (!$entity instanceof HumanNPC) {
-            $this->Logger("Entity is NOT a HumanNPC");
-            return;
+        if (
+            $entity instanceof HumanNPC &&
+            $entity->getNamedTag()->getTag("npc_id") !== null
+        )
+        {
+            $id = $entity->getNamedTag()->getString("npc_id");
+            $this->Logger("Entity is an NPC | NPC id is: " . $id);
+            $event->cancel();
+            $this->plugin->onNpcTapped($damager, $id);
         }
+        else
+        {
+            $this->Logger("Entity is NOT a NPC or has missing npc_id value in nbt");
+        }
+
 
         $id = $entity->getNetworkProperties()->getString(100, null);
 

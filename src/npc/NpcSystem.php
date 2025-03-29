@@ -8,6 +8,7 @@ use pocketmine\entity\Skin;
 use pocketmine\math\Vector3;
 use pocketmine\entity\Location;
 use pocketmine\player\Player;
+use pocketmine\utils\TextFormat;
 use pocketmine\world\World;
 use ckgcam\chocbar\npc\HumanNPC;
 
@@ -25,29 +26,52 @@ class NpcSystem {
         $this->plugin = $plugin;
     }
 
+    private function Logger(String $message): void
+    {
+        $this->plugin->getLogger()->info(TextFormat::YELLOW."[NPC System]" . TextFormat::GREEN . "|" . TextFormat::WHITE . "[" . $message . "]");
+    }
+
     public function spawnHubNPC(Player $player, World $world, Vector3 $position, string $nametag, string $npcId): void {
         $name = $player->getName();
 
+        $this->Logger("Spawning NPC For Player: ".
+            $name .
+        " At World: " .
+        $world .
+        " With Cords: " .
+        $position .
+        " | Nametag: " .
+            $nametag .
+            " | NPCId: " .
+            $npcId);
+
         // Check if this specific NPC has already been spawned for the player
         if (isset($this->spawnedNpcs[$name][$npcId]) && !$this->spawnedNpcs[$name][$npcId]->isClosed()) {
-            $this->plugin->getLogger()->info("[chocbar] NPC '$npcId' already spawned for $name");
+            $this->Logger( "NPC '$npcId' already spawned for $name");
             return;
         }
 
-        $this->plugin->getLogger()->info("[chocbar] Spawning NPC '$npcId' for $name");
+        Logger("Spawning NPC '$npcId' for $name");
 
+        Logger("Loading Skin....");
         $skin = $this->loadSkin("test") ?? new Skin("fallback", str_repeat("\x00", 8192));
         $location = new Location($position->getX(), $position->getY(), $position->getZ(), $world, 0, 0);
-        $npc = new HumanNPC($location, $skin);
+        Logger("Adding Nbt CompoundTag '$npcId' under npc_id");
+        $nbt = CompoundTag::create()->setString("npc_id", $npcId);
+        Logger("Creating Npc...");
+        $npc = new HumanNPC($location, $skin, $nbt);
 
+
+        Logger("Setting NPC NameTag Too: ". $nametag);
         $npc->setNameTag($nametag);
-        $npc->getNetworkProperties()->setString(100, $npcId); // 100 is a safe custom metadata index
         $npc->setNameTagVisible(true);
         $npc->setNameTagAlwaysVisible(true);
 
+        Logger("SpawnTo: " . $player);
         $npc->spawnTo($player);
 
         // Track this NPC by player + id
+        Logger("Added [" .  $name . " | " . $npcId . "] To spawnedNpcs List Keeping Track...");
         $this->spawnedNpcs[$name][$npcId] = $npc;
     }
 
