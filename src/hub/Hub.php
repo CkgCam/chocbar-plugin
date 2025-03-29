@@ -22,6 +22,10 @@ class Hub {
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
     }
+    private function Logger(String $message): void
+    {
+        $this->plugin->getLogger()->info(TextFormat::YELLOW."[Hub]" . TextFormat::GREEN . "|" . TextFormat::WHITE . "[" . $message . "]");
+    }
 
     public function setBossBarManager(BossBarManager $bossBarManager): void {
         $this->bossBarManager = $bossBarManager;
@@ -32,7 +36,7 @@ class Hub {
     }
 
     public function enable(): void {
-        $this->plugin->getLogger()->info(TextFormat::GREEN . "chocbar Hub Manager loaded!");
+        $this->Logger("chocbar Hub Manager loaded!");
 
         $this->plugin->getScheduler()->scheduleRepeatingTask(new ClosureTask(function (): void {
             foreach ($this->plugin->getServer()->getWorldManager()->getWorlds() as $world) {
@@ -41,7 +45,7 @@ class Hub {
             }
         }), 100);
 
-        $this->plugin->getLogger()->info(TextFormat::GREEN . "Time locked to midday in Hub worlds.");
+        $this->Logger("chocbar Hub Manager loaded!");
     }
 
     public function WhenPlayerJoins(Player $player): void {
