@@ -40,7 +40,7 @@ class Main extends PluginBase {
 
     private function Logger(String $message): void
     {
-        $this->getLogger()->info(TextFormat::DARK_PURPLE."[Main]" . TextFormat::GREEN . "|" . TextFormat::WHITE . "[" . $message . "]");
+        $this->getLogger()->info(TextFormat::DARK_PURPLE."[Main]" . TextFormat::GREEN . " > " . TextFormat::WHITE . "[" . $message . "]");
     }
 
 

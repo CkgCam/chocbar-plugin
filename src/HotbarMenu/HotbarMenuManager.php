@@ -96,7 +96,7 @@ class HotbarMenuManager
     {
         $this->plugin->getLogger()->info(
             TextFormat::YELLOW . "[HotbarMenuManager]" .
-            TextFormat::GREEN . " | " .
+            TextFormat::GREEN . " > " .
             TextFormat::WHITE . "[{$message}]"
         );
     }

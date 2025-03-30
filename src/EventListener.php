@@ -40,7 +40,7 @@ class EventListener implements Listener {
 
     private function Logger(String $message): void
     {
-        $this->plugin->getLogger()->info(TextFormat::AQUA."[Event Listener]" . TextFormat::GREEN . "|" . TextFormat::WHITE . "[" . $message . "]");
+        $this->plugin->getLogger()->info(TextFormat::AQUA."[Event Listener]" . TextFormat::GREEN . " > " . TextFormat::WHITE . "[" . $message . "]");
     }
 
     public function onPlayerJoin(PlayerJoinEvent $event): void {

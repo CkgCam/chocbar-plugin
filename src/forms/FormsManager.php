@@ -25,8 +25,8 @@ class FormsManager {
     private function logger(string $message): void
     {
         $this->plugin->getLogger()->info(
-            TextFormat::YELLOW . "[HotbarMenuManager]" .
-            TextFormat::GREEN . " | " .
+            TextFormat::YELLOW . "[FormManager]" .
+            TextFormat::GREEN . " > " .
             TextFormat::WHITE . "[{$message}]"
         );
     }

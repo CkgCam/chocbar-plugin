@@ -28,7 +28,7 @@ class NpcSystem {
     }
 
     private function Logger(string $message): void {
-        $this->plugin->getLogger()->info(TextFormat::YELLOW . "[NPC System] " . TextFormat::WHITE . $message);
+        $this->plugin->getLogger()->info(TextFormat::YELLOW . "[NPC System]" . TextFormat::GREEN ." > ". TextFormat::WHITE ."[". $message . "]");
     }
 
     public function spawnHubNPC(Player $player, World $world, Vector3 $position, string $nametag, string $npcId): void {

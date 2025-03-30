@@ -27,7 +27,7 @@ class Hub {
     }
 
     private function logger(string $message): void {
-        $this->plugin->getLogger()->info(TextFormat::YELLOW . "[Hub]" . TextFormat::GREEN . "|" . TextFormat::WHITE . "[{$message}]");
+        $this->plugin->getLogger()->info(TextFormat::YELLOW . "[Hub]" . TextFormat::GREEN . " > " . TextFormat::WHITE . "[{$message}]");
     }
 
     public function enable(): void {
