@@ -9,17 +9,17 @@ class Hotbars {
     public static array $hub = [
         [
             "name" => "Navigator",
-            "item" => "minecraft:compass",
+            "item" => "compass",
             "enchanted" => false
         ],
         [
             "name" => "Info Book",
-            "item" => "minecraft:book",
+            "item" => "book",
             "enchanted" => false
         ],
         [
             "name" => "Emerald Shop",
-            "item" => "minecraft:emerald",
+            "item" => "emerald",
             "enchanted" => true
         ]
     ];
@@ -28,17 +28,17 @@ class Hotbars {
     public static array $survival = [
         [
             "name" => "Starter Axe",
-            "item" => "minecraft:iron_axe",
+            "item" => "iron_axe",
             "enchanted" => true
         ],
         [
             "name" => "Starter Pickaxe",
-            "item" => "minecraft:iron_pickaxe",
+            "item" => "iron_pickaxe",
             "enchanted" => true
         ],
         [
             "name" => "Magic Stick",
-            "item" => "minecraft:stick",
+            "item" => "stick",
             "enchanted" => true
         ]
     ];

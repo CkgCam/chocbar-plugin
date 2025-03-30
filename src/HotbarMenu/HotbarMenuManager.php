@@ -5,49 +5,58 @@ declare(strict_types=1);
 namespace ckgcam\chocbar\HotbarMenu;
 
 use pocketmine\item\VanillaItems;
+use pocketmine\item\Item;
+use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
-use pocketmine\item\Item;
-use ckgcam\chocbar\HotbarMenu\Hotbars;
 
 class HotbarMenuManager
 {
-    private $plugin;
+    private mixed $plugin;
 
     /** @var array<string, Hotbars> */
     private array $activeHotbars = [];
 
-    public function __construct($plugin)
+    public function __construct(mixed $plugin)
     {
         $this->plugin = $plugin;
     }
 
-    private function Logger(string $message): void
-    {
-        $this->plugin->getLogger()->info(TextFormat::YELLOW . "[HotbarMenuManager]" . TextFormat::GREEN . "|" . TextFormat::WHITE . "[{$message}]");
-    }
-
     public function enable(): void
     {
-        $this->Logger("Hotbar Menu loaded");
+        $this->log("Hotbar Menu loaded");
     }
 
-    public function ApplyHotbar(Player $player, array $slots): void
+    /**
+     * Applies a hotbar layout to the specified player.
+     *
+     * @param Player $player
+     * @param array<int, array{name: string, item: string, enchanted?: bool}> $slots
+     */
+    public function applyHotbar(Player $player, array $slots): void
     {
         $name = $player->getName();
-        $this->Logger("Applying hotbar for {$name}");
+        $this->log("Applying hotbar for {$name}");
 
         $inventory = $player->getInventory();
         $inventory->clearAll();
 
         for ($i = 0; $i < 9; $i++) {
-            $Currentslot = $slots[$i] ?? null;
+            $slot = $slots[$i] ?? null;
 
-            if ($Currentslot !== null) {
-                $this->Logger("Slot {$i}: " . json_encode($Currentslot));
+            if ($slot !== null) {
+                $this->log("Slot {$i}: " . json_encode($slot));
 
-                $item = $this->getItemFromName($Currentslot["item"]);
-                $item->setCustomName("§r" . $Currentslot["name"]);
+                $itemName = $slot["item"] ?? "air";
+                $customName = $slot["name"] ?? ucfirst($itemName);
+                $enchanted = $slot["enchanted"] ?? false;
+
+                $item = $this->resolveItemFromName($itemName);
+                $item->setCustomName("§r" . $customName);
+
+                if ($enchanted) {
+                    //$item->addEnchantment(new EnchantmentInstance(VanillaEnchantments::UNBREAKING(), 1));
+                }
 
                 $inventory->setItem($i, $item);
             } else {
@@ -56,32 +65,39 @@ class HotbarMenuManager
         }
     }
 
-
-    public function RemoveHotbar(Player $player): void
+    public function removeHotbar(Player $player): void
     {
-        $name = $player->getName();
-        unset($this->activeHotbars[$name]);
-
+        unset($this->activeHotbars[$player->getName()]);
         $player->getInventory()->clearAll();
-        $this->Logger("Removed hotbar for {$name}");
+        $this->log("Removed hotbar for {$player->getName()}");
     }
 
-    public function GetActiveHotbar(Player $player): void
+    public function getActiveHotbar(Player $player): void
     {
-        // Your logic here
+        // You can implement logic here if needed
     }
 
-    private function getItemFromName(string $name): Item
+    /**
+     * Resolves a VanillaItems method from a string like "compass" or "iron_axe"
+     */
+    private function resolveItemFromName(string $name): Item
     {
-        // Normalize to uppercase and underscores
-        $method = strtoupper($name);
-        $method = str_replace(" ", "_", $method);
+        $method = strtoupper(str_replace(" ", "_", $name));
 
         if (method_exists(VanillaItems::class, $method)) {
             return VanillaItems::$method();
         }
 
-        // Default to AIR if not found
+        $this->log("Unknown item name '{$name}', defaulting to AIR");
         return VanillaItems::AIR();
+    }
+
+    private function log(string $message): void
+    {
+        $this->plugin->getLogger()->info(
+            TextFormat::YELLOW . "[HotbarMenuManager]" .
+            TextFormat::GREEN . " | " .
+            TextFormat::WHITE . "[{$message}]"
+        );
     }
 }

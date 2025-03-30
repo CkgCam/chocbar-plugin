@@ -22,10 +22,19 @@ class FormsManager {
         $this->plugin = $plugin;
     }
 
+    private function logger(string $message): void
+    {
+        $this->plugin->getLogger()->info(
+            TextFormat::YELLOW . "[HotbarMenuManager]" .
+            TextFormat::GREEN . " | " .
+            TextFormat::WHITE . "[{$message}]"
+        );
+    }
+
     public function enable(): void
     {
         $this->hotbarMenuManager = $this->plugin->getHotbarMenuManager();
-        $this->plugin->getLogger()->info(TextFormat::GREEN . "chocbar Forms Manager loaded!");
+        $this->logger("chocbar Forms Manager loaded!");
     }
     public function openNaviForm(Player $player): void
     {
