@@ -62,12 +62,6 @@ class Main extends PluginBase {
         $this->worldManager = new WorldManager($this);
         $this->npcSystem = new NpcSystem($this);
 
-
-        //Make sure event listner enable gets called
-        $this->eventListener->enable();
-        $this->formsManager->enable();
-        $this->hotbarManager->enable();
-
         // Load specific game mode logic
         if ($this->servertype === "survival") {
             $this->survival = new Survival($this);
@@ -79,6 +73,11 @@ class Main extends PluginBase {
             $this->hub->enable();
             $this->blockTickingDisabled = true;
         }
+
+        $this->eventListener->enable();
+        $this->formsManager->enable();
+        $this->hotbarManager->enable();
+
         $this->Logger("chocbar lib loaded!");
     }
 
