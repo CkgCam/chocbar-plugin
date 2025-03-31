@@ -52,6 +52,11 @@ class Main extends PluginBase {
         $this->saveResource("skins/test.png");
         $this->servertype = strtolower($this->getConfig()->get("server-type", "hub"));
 
+        $icons = ["default.png"];
+        foreach ($icons as $icon) {
+            $this->saveResource("forms/icons/" . $icon);
+        }
+
         // Register core event listener
         $this->eventListener = new EventListener($this);
         $this->getServer()->getPluginManager()->registerEvents($this->eventListener, $this);
