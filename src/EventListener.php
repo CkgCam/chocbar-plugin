@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ckgcam\chocbar;
 
+use ckgcam\chocbar\HotbarMenu\HotbarMenuManager;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -22,6 +23,13 @@ use pocketmine\event\entity\{
     EntityPreExplodeEvent,
     EntityTrampleFarmlandEvent
 };
+
+use pocketmine\event\inventory\InventoryTransactionEvent;
+use pocketmine\event\player\PlayerDropItemEvent;
+use pocketmine\event\player\PlayerItemHeldEvent;
+use pocketmine\event\player\PlayerItemUseEvent;
+use pocketmine\inventory\transaction\action\SlotChangeAction;
+
 use pocketmine\block\Farmland;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\utils\TextFormat;
@@ -34,8 +42,15 @@ class EventListener implements Listener {
 
     private Main $plugin;
 
+    private HotbarMenuManager $hotbarMenuManager;
+
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
+    }
+
+    public function enable(): void
+    {
+        $this->hotbarMenuManager = $this->plugin->getScript("HotbarMenuManager");
     }
 
     private function Logger(String $message): void
@@ -58,13 +73,6 @@ class EventListener implements Listener {
     public function onPlayerQuit(PlayerQuitEvent $event): void {
         $player = $event->getPlayer();
         $this->Logger( "Player quit: " . $player->getName());
-
-        if ($this->plugin->getServerType() === "hub") {
-            $hub = $this->plugin->getHub();
-            if ($hub !== null) {
-                $hub->onPlayerQuitEvent($player);
-            }
-        }
     }
 
     public function onNpcTap(EntityDamageByEntityEvent $event): void {
@@ -91,6 +99,58 @@ class EventListener implements Listener {
         else
         {
             $this->Logger("Not An NPC");
+        }
+    }
+
+
+    //Inventory ish events
+    public function onInventoryTransaction(InventoryTransactionEvent $event): void {
+        foreach ($event->getTransaction()->getActions() as $action) {
+            if ($action instanceof SlotChangeAction) {
+                $inventory = $action->getInventory();
+                $holder = $inventory->getHolder();
+
+                if ($holder instanceof Player) {
+                    $player = $holder;
+
+                    //Do thingy here
+                    if($this->hotbarMenuManager !== null)
+                    {
+                        $this->hotbarMenuManager->OnInventoryEvent($player, $event);
+                    }
+
+                    // No need to keep checking once player found
+                    break;
+                }
+            }
+        }
+    }
+
+
+    public function onPlayerDropItem(PlayerDropItemEvent $event): void {
+        // cancel dropping items
+        $player = $event->getPlayer();
+        if($this->hotbarMenuManager !== null)
+        {
+            $this->hotbarMenuManager->OnInventoryEvent($player, $event);
+        }
+    }
+
+    public function onPlayerItemHeld(PlayerItemHeldEvent $event): void {
+        // cancel changing selected hotbar slot
+        $player = $event->getPlayer();
+        if($this->hotbarMenuManager !== null)
+        {
+            $this->hotbarMenuManager->OnInventoryEvent($player, $event);
+        }
+    }
+
+    public function onPlayerItemUse(PlayerItemUseEvent $event): void {
+        // cancel using item (right click, etc.)
+        $player = $event->getPlayer();
+        if($this->hotbarMenuManager !== null)
+        {
+            $this->hotbarMenuManager->OnInventoryEvent($player, $event);
         }
     }
 

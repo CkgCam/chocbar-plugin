@@ -81,11 +81,6 @@ class Main extends PluginBase {
         $this->Logger("chocbar lib shutting down!");
     }
 
-    // Getters
-    public function getSurvival(): ?Survival {
-        return $this->survival;
-    }
-
     public function getScript(String $type)
     {
 
@@ -101,18 +96,6 @@ class Main extends PluginBase {
                     default:
                         return null;
         }
-    }
-
-    public function getHub(): ?Hub {
-        return $this->hub;
-    }
-
-    public function getNpcSystem(): ?NpcSystem {
-        return $this->npcSystem;
-    }
-
-    public function getHotbarMenuManager(): HotbarMenuManager {
-        return $this->hotbarManager;
     }
 
     public function getServerType(): string {

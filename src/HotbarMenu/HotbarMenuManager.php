@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace ckgcam\chocbar\HotbarMenu;
 
+use pocketmine\inventory\Inventory;
 use pocketmine\item\VanillaItems;
 use pocketmine\item\Item;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
+use pocketmine\event\Event;
+use pocketmine\event\Cancellable;
 
 class HotbarMenuManager
 {
@@ -37,6 +40,12 @@ class HotbarMenuManager
     {
         $name = $player->getName();
         $this->log("Applying hotbar for {$name}");
+
+
+        // Track active hotbar
+        $this->activeHotbars[$name] = [
+            "slots" => $slots
+        ];
 
         $inventory = $player->getInventory();
         $inventory->clearAll();
@@ -72,9 +81,26 @@ class HotbarMenuManager
         $this->log("Removed hotbar for {$player->getName()}");
     }
 
-    public function getActiveHotbar(Player $player): void
+    //Check if the player currently has a hotbar attached
+    public function hasHotbar(Player $player): bool
     {
-        // You can implement logic here if needed
+        return isset($this->activeHotbars[$player->getName()]);
+    }
+
+    //Called whenever these an inventory event
+    public function OnInventoryEvent(Player $player, Event $event): void
+    {
+        //Make sure the event passed in is able to be canceld otherwise ignore
+        if (!$event instanceof Cancellable) {
+            $this->log("Unable to cancel inventory event something went wrong");
+            return;
+        }
+
+
+        if ($this->hasHotbar($player)) {
+            $event->cancel();
+            $this->log("Inventory event for {$player->getName()} has been canceled");
+        }
     }
 
     /**

@@ -65,22 +65,39 @@ class NpcSystem {
     public function despawnHubNPC(Player $player, ?string $npcId = null): void {
         $name = $player->getName();
 
+        if (!isset($this->spawnedNpcs[$name])) {
+            $this->Logger("No NPCs tracked for $name");
+            return;
+        }
+
         if ($npcId !== null) {
-            if (isset($this->spawnedNpcs[$name][$npcId])) {
-                $npc = $this->spawnedNpcs[$name][$npcId];
+            $npc = $this->spawnedNpcs[$name][$npcId] ?? null;
+
+            if ($npc instanceof HumanNPC) {
                 if (!$npc->isClosed()) {
-                    $npc->close();
+                    $npc->flagForDespawn(); // more graceful than close()
+                    $this->Logger("Despawned NPC '$npcId' for $name");
+                } else {
+                    $this->Logger("NPC '$npcId' was already closed for $name");
                 }
                 unset($this->spawnedNpcs[$name][$npcId]);
-                $this->Logger("Despawned NPC '$npcId' for $name");
+            } else {
+                $this->Logger("NPC '$npcId' not found for $name");
             }
+
+            // Clean up the array if empty
+            if (empty($this->spawnedNpcs[$name])) {
+                unset($this->spawnedNpcs[$name]);
+            }
+
         } else {
-            foreach ($this->spawnedNpcs[$name] ?? [] as $id => $npc) {
-                if (!$npc->isClosed()) {
-                    $npc->close();
+            foreach ($this->spawnedNpcs[$name] as $id => $npc) {
+                if ($npc instanceof HumanNPC && !$npc->isClosed()) {
+                    $npc->flagForDespawn();
+                    $this->Logger("Despawned NPC '$id' for $name");
                 }
-                $this->Logger("Despawned NPC '$id' for $name");
             }
+
             unset($this->spawnedNpcs[$name]);
         }
     }
