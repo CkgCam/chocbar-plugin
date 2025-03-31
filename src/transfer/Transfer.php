@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ckgcam\chocbar\transfer;
 
+use pocketmine\network\mcpe\protocol\TransferPacket;
 use pocketmine\player\Player;
 
 class Transfer
