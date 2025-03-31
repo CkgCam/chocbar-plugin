@@ -17,7 +17,7 @@ class Transfer {
      */
     public int $transfertype = 0;
 
-    public function send(Player $player, string $serverID): void {
+    public function transfer(Player $player, string $serverID): void {
         switch ($this->transfertype) {
             case 0:
                 $this->internal($player, $serverID);
