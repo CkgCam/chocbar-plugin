@@ -118,7 +118,7 @@ class EventListener implements Listener {
                     //Do thingy here
                     if($this->hotbarMenuManager !== null)
                     {
-                        $this->hotbarMenuManager->OnInventoryEvent($player, $event);
+                        $this->hotbarMenuManager->CancelInvEvent($player, $event);
                     }
 
                     // No need to keep checking once player found
@@ -134,7 +134,7 @@ class EventListener implements Listener {
         $player = $event->getPlayer();
         if($this->hotbarMenuManager !== null)
         {
-            $this->hotbarMenuManager->OnInventoryEvent($player, $event);
+            $this->hotbarMenuManager->CancelInvEvent($player, $event);
         }
     }
 
@@ -148,7 +148,7 @@ class EventListener implements Listener {
         $player = $event->getPlayer();
         if($this->hotbarMenuManager !== null)
         {
-            $this->hotbarMenuManager->OnInventoryEvent($player, $event);
+            $this->hotbarMenuManager->OnUseItemEvent($player, $event);
         }
     }
 

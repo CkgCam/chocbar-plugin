@@ -88,7 +88,7 @@ class HotbarMenuManager
     }
 
     //Called whenever these an inventory event
-    public function OnInventoryEvent(Player $player, Event $event): void
+    public function CancelInvEvent(Player $player, Event $event): void
     {
         //Make sure the event passed in is able to be canceld otherwise ignore
         if (!$event instanceof Cancellable) {
@@ -103,6 +103,45 @@ class HotbarMenuManager
         }
     }
 
+    public function OnUseItemEvent(Player $player, Event $event): void
+    {
+        if (!$event instanceof Cancellable) {
+            $this->log("Unable to cancel inventory event something went wrong");
+            return;
+        }
+
+        if ($this->hasHotbar($player)) {
+            $item = $event->getItem();
+            $slot = $player->getInventory()->getHeldItemIndex(); // Hotbar slot 0–8
+
+            // Get the slot data
+            $slotData = $this->activeHotbars[$player->getName()]["slots"][$slot] ?? null;
+
+            CallFuncForItem($slotData["call_id"] ?? null);
+
+            $event->cancel();
+            $this->log("Inventory event for {$player->getName()} has been canceled");
+        }
+    }
+
+    public function CallFuncForItem(Player $player, String $id): void
+    {
+        switch ($id) {
+            case "openNavi":
+                $player->sendMessage(TextFormat::GREEN . "Navi open");
+                break;
+            case "openBook":
+                $player->sendMessage(TextFormat::GREEN . "Book open");
+                break;
+            case "openShop":
+                    $player->sendMessage(TextFormat::GREEN . "Shop open");
+                break;
+                default:
+                    $player->sendMessage(TextFormat::GREEN . "Unknown id");
+                    break;
+
+        }
+    }
     /**
      * Resolves a VanillaItems method from a string like "compass" or "iron_axe"
      */

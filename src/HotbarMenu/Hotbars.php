@@ -10,17 +10,20 @@ class Hotbars {
         [
             "name" => "Navigator",
             "item" => "compass",
-            "enchanted" => false
+            "enchanted" => false,
+            "call_id" => "openNaviForm"
         ],
         [
             "name" => "Info Book",
             "item" => "book",
-            "enchanted" => false
+            "enchanted" => false,
+             "call_id" => "openBook"
         ],
         [
             "name" => "Emerald Shop",
             "item" => "emerald",
-            "enchanted" => true
+            "enchanted" => true,
+            "call_id" => "openShop"
         ]
     ];
 
