@@ -51,9 +51,10 @@ class Main extends PluginBase {
         $this->servertype = strtolower($this->getConfig()->get("server-type", "hub"));
 
         // Register core event listener
-        $eventListener = new EventListener($this);
-        $this->getServer()->getPluginManager()->registerEvents($eventListener, $this);
+        $this->eventListener = new EventListener($this);
+        $this->getServer()->getPluginManager()->registerEvents($this->eventListener, $this);
         $this->Logger("Registered EventListener");
+
 
         // Initialize core managers
         $this->hotbarManager = new HotbarMenuManager($this);
