@@ -62,7 +62,10 @@ class FormsManager {
 
         $form->setTitle(TextFormat::RED . TextFormat::BOLD . "Navi Menu");
 
-        $form->addButton(TextFormat::BOLD . TextFormat::BLUE . "Survival Mode");
+        $iconPath = $this->plugin->getDataFolder() . "forms/icons/default.png";
+        $base64 = "data:image/png;base64," . base64_encode(file_get_contents($iconPath));
+
+        $form->addButton(TextFormat::BOLD . TextFormat::BLUE . "Survival Mode", 1, $base64);
         $form->addButton(TextFormat::BOLD . TextFormat::YELLOW . "Skyblock");
 
         $player->sendForm($form);
