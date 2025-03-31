@@ -106,23 +106,26 @@ class HotbarMenuManager
     public function OnUseItemEvent(Player $player, Event $event): void
     {
         if (!$event instanceof Cancellable) {
-            $this->log("Unable to cancel inventory event something went wrong");
+            $this->log("Unable to cancel inventory event — not cancellable.");
             return;
         }
 
         if ($this->hasHotbar($player)) {
-            $item = $event->getItem();
             $slot = $player->getInventory()->getHeldItemIndex(); // Hotbar slot 0–8
-
-            // Get the slot data
             $slotData = $this->activeHotbars[$player->getName()]["slots"][$slot] ?? null;
 
-            CallFuncForItem($slotData["call_id"] ?? "failed");
+            if ($slotData === null) {
+                $this->log("Failed To Get Slot Data For {$player->getName()}");
+                return;
+            }
+
+            $this->CallFuncForItem($player, $slotData["call_id"] ?? "failed");
 
             $event->cancel();
-            $this->log("Inventory event for {$player->getName()} has been canceled");
+            $this->log("Use event for {$player->getName()} has been canceled and action run.");
         }
     }
+
 
     public function CallFuncForItem(Player $player, String $id): void
     {
@@ -136,9 +139,6 @@ class HotbarMenuManager
             case "openShop":
                     $player->sendMessage(TextFormat::GREEN . "Shop open");
                 break;
-                case "failed":
-                    $player->sendMessage(TextFormat::RED . "Failed To Pull Call Id From This Item");
-                    break;
                 default:
                     $player->sendMessage(TextFormat::RED . "Unknown id");
                     break;
