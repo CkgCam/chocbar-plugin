@@ -84,13 +84,14 @@ class HotbarMenuManager
     {
         $method = strtoupper(str_replace(" ", "_", $name));
 
-        if (method_exists(VanillaItems::class, $method)) {
-            return VanillaItems::$method();
+        if (is_callable([VanillaItems::class, $method])) {
+            return call_user_func([VanillaItems::class, $method]);
         }
 
         $this->log("Unknown item name '{$name}', defaulting to AIR");
         return VanillaItems::AIR();
     }
+
 
     private function log(string $message): void
     {
