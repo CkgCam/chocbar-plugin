@@ -141,10 +141,6 @@ class EventListener implements Listener {
     public function onPlayerItemHeld(PlayerItemHeldEvent $event): void {
         // cancel changing selected hotbar slot
         $player = $event->getPlayer();
-        if($this->hotbarMenuManager !== null)
-        {
-            $this->hotbarMenuManager->OnInventoryEvent($player, $event);
-        }
     }
 
     public function onPlayerItemUse(PlayerItemUseEvent $event): void {
