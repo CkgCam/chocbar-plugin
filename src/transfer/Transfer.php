@@ -64,10 +64,7 @@ class Transfer {
     }
 
     private function transferPlayer(Player $player, string $ip, int $port): void {
-        $pk = new TransferPacket();
-        $pk->address = $ip;
-        $pk->port = $port;
+        $player->transfer($ip, $port);
 
-        $player->getNetworkSession()->sendDataPacket($pk);
     }
 }
