@@ -117,7 +117,7 @@ class HotbarMenuManager
             // Get the slot data
             $slotData = $this->activeHotbars[$player->getName()]["slots"][$slot] ?? null;
 
-            CallFuncForItem($slotData["call_id"] ?? null);
+            CallFuncForItem($slotData["call_id"] ?? "failed");
 
             $event->cancel();
             $this->log("Inventory event for {$player->getName()} has been canceled");
@@ -136,8 +136,11 @@ class HotbarMenuManager
             case "openShop":
                     $player->sendMessage(TextFormat::GREEN . "Shop open");
                 break;
+                case "failed":
+                    $player->sendMessage(TextFormat::RED . "Failed To Pull Call Id From This Item");
+                    break;
                 default:
-                    $player->sendMessage(TextFormat::GREEN . "Unknown id");
+                    $player->sendMessage(TextFormat::RED . "Unknown id");
                     break;
 
         }
