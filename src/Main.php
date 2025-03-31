@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ckgcam\chocbar;
 
+use ckgcam\chocbar\EventListener;
 use ckgcam\chocbar\npc\npc_survival;
 use ckgcam\chocbar\npc\CustomNPC;
 use pocketmine\plugin\PluginBase;
@@ -20,7 +21,6 @@ use ckgcam\chocbar\hub\Hub;
 use ckgcam\chocbar\npc\NpcSystem;
 use ckgcam\chocbar\survival\Survival;
 use ckgcam\chocbar\world\WorldManager;
-use ckgcam\chocbar\EventListener;
 
 use pocketmine\entity\EntityFactory;
 use pocketmine\nbt\tag\CompoundTag;
@@ -28,6 +28,7 @@ use pocketmine\world\World;
 
 class Main extends PluginBase {
 
+    private EventListener $eventListener;
     private HotbarMenuManager $hotbarManager;
     private FormsManager $formsManager;
     private BossBarManager $bossBarManager;
@@ -50,7 +51,8 @@ class Main extends PluginBase {
         $this->servertype = strtolower($this->getConfig()->get("server-type", "hub"));
 
         // Register core event listener
-        $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
+        $eventListener = new EventListener($this);
+        $this->getServer()->getPluginManager()->registerEvents($eventListener, $this);
         $this->Logger("Registered EventListener");
 
         // Initialize core managers
@@ -60,6 +62,9 @@ class Main extends PluginBase {
         $this->worldManager = new WorldManager($this);
         $this->npcSystem = new NpcSystem($this);
 
+
+        //Make sure event listner enable gets called
+        $this->eventListener->enable();
         $this->formsManager->enable();
         $this->hotbarManager->enable();
 
@@ -81,22 +86,18 @@ class Main extends PluginBase {
         $this->Logger("chocbar lib shutting down!");
     }
 
-    public function getScript(String $type)
+    //return instances of the scripts based on there names
+    public function getScript(string $type): mixed
     {
-
-        switch ($type) {
-            case "NpcSystem":
-                return $this->npcSystem;
-                case "hub":
-                    return $this->hub;
-                    case "BossBarManager":
-                        return $this->bossBarManager;
-                        case "HotbarMenuManager":
-                            return $this->hotbarManager;
-                    default:
-                        return null;
-        }
+        return match ($type) {
+            "NpcSystem" => $this->npcSystem,
+            "hub" => $this->hub,
+            "BossBarManager" => $this->bossBarManager,
+            "HotbarMenuManager" => $this->hotbarManager,
+            default => null,
+        };
     }
+
 
     public function getServerType(): string {
         return $this->servertype;
@@ -115,8 +116,8 @@ class Main extends PluginBase {
 
         return match ($cmd->getName()) {
             "tpworld" => $this->worldManager->handleCommand($sender, $cmd, $label, $args),
-            "admin" => $this->formsManager->AdminMenu($sender),
-            "menu" => $this->openGameModeMenu($sender),
+            //"admin" => $this->formsManager->AdminMenu($sender),
+            //"menu" => $this->openGameModeMenu($sender),
             default => false,
         };
     }

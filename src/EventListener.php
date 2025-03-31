@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ckgcam\chocbar;
 
 use ckgcam\chocbar\HotbarMenu\HotbarMenuManager;
+use ckgcam\chocbar\hub\Hub;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -43,6 +44,7 @@ class EventListener implements Listener {
     private Main $plugin;
 
     private HotbarMenuManager $hotbarMenuManager;
+    private Hub $hub;
 
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
@@ -51,6 +53,7 @@ class EventListener implements Listener {
     public function enable(): void
     {
         $this->hotbarMenuManager = $this->plugin->getScript("HotbarMenuManager");
+        $this->hub = $this->plugin->getScript("hub");
     }
 
     private function Logger(String $message): void
@@ -63,9 +66,8 @@ class EventListener implements Listener {
         $this->Logger( "Player joined: " . $player->getName());
 
         if ($this->plugin->getServerType() === "hub") {
-            $hub = $this->plugin->getHub();
-            if ($hub !== null) {
-                $hub->OnPlayerJoin($player); // ✅ call the updated method
+            if ($this->hub !== null) {
+                $this->hub->OnPlayerJoin($player); // ✅ call the updated method
             }
         }
     }
