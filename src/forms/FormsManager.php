@@ -39,7 +39,7 @@ class FormsManager {
     }
     public function openNaviForm(Player $player): void
     {
-        $form = new SimpleForm(function (Player $player, ?array $data)
+        $form = new SimpleForm(function (Player $player, ?int $data)
         {
             if ($data === null) return; // Player closed the form
 
