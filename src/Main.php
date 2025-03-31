@@ -94,6 +94,7 @@ class Main extends PluginBase {
             "hub" => $this->hub,
             "BossBarManager" => $this->bossBarManager,
             "HotbarMenuManager" => $this->hotbarManager,
+            "FormsManager" => $this->formsManager,
             default => null,
         };
     }

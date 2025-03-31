@@ -4,29 +4,36 @@ declare(strict_types=1);
 
 namespace ckgcam\chocbar\HotbarMenu;
 
+use ckgcam\chocbar\forms\FormsManager;
+use ckgcam\chocbar\Main;
+use pocketmine\form\Form;
 use pocketmine\inventory\Inventory;
 use pocketmine\item\VanillaItems;
 use pocketmine\item\Item;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\player\Player;
+use pocketmine\plugin\Plugin;
 use pocketmine\utils\TextFormat;
 use pocketmine\event\Event;
 use pocketmine\event\Cancellable;
 
 class HotbarMenuManager
 {
-    private mixed $plugin;
+    private Main $plugin;
+
+    private FormsManager $formsManager;
 
     /** @var array<string, Hotbars> */
     private array $activeHotbars = [];
 
-    public function __construct(mixed $plugin)
+    public function __construct(Main $plugin)
     {
         $this->plugin = $plugin;
     }
 
     public function enable(): void
     {
+        $this->formsManager = $this->plugin->getScript("FormsManager");
         $this->log("Hotbar Menu loaded");
     }
 
@@ -132,6 +139,7 @@ class HotbarMenuManager
         switch ($id) {
             case "openNavi":
                 $player->sendMessage(TextFormat::GREEN . "Navi open");
+                $this->formsManager->openNaviForm($player);
                 break;
             case "openBook":
                 $player->sendMessage(TextFormat::GREEN . "Book open");

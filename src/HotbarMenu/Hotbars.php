@@ -11,7 +11,7 @@ class Hotbars {
             "name" => "Navigator",
             "item" => "compass",
             "enchanted" => false,
-            "call_id" => "openNaviForm"
+            "call_id" => "openNavi"
         ],
         [
             "name" => "Info Book",
