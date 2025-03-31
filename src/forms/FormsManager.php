@@ -33,7 +33,8 @@ class FormsManager {
 
     public function enable(): void
     {
-        $this->hotbarMenuManager = $this->plugin->getHotbarMenuManager();
+        //$this->hotbarMenuManager = $this->plugin->getHotbarMenuManager();
+        $this->hotbarMenuManage = $this->plugin->getScript("HotbarMenuManager");
         $this->logger("chocbar Forms Manager loaded!");
     }
     public function openNaviForm(Player $player): void
