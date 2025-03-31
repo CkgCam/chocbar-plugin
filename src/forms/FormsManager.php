@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ckgcam\chocbar\forms;
 
+use ckgcam\chocbar\transfer\Transfer;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use ckgcam\chocbar\Main;
@@ -15,7 +16,9 @@ class FormsManager {
 
     private Main $plugin; // ✅ Correct type hint
 
-    public HotbarMenuManager $hotbarMenuManager;
+    private HotbarMenuManager $hotbarMenuManager;
+
+    private Transfer $transfer;
 
     public function __construct(Main $plugin)
     {
@@ -35,6 +38,7 @@ class FormsManager {
     {
         //$this->hotbarMenuManager = $this->plugin->getHotbarMenuManager();
         $this->hotbarMenuManage = $this->plugin->getScript("HotbarMenuManager");
+        $this->transfer = $this->plugin->getScript("Transfer");
         $this->logger("chocbar Forms Manager loaded!");
     }
     public function openNaviForm(Player $player): void
@@ -42,13 +46,24 @@ class FormsManager {
         $form = new SimpleForm(function (Player $player, ?int $data)
         {
             if ($data === null) return; // Player closed the form
+            switch ($data) {
+                case 0:
+                    $player->sendMessage(TextFormat::GREEN . "Teleporting to survival...");
+                    $this->transfer->transfer($player, "survival");
+                    break;
+                    case 1:
+                        $player->sendMessage(TextFormat::GREEN . "Teleporting to skyblock...");
+                        break;
+                        default:
+                            $player->sendMessage(TextFormat::RED . "Unknown Teleportion");
+            }
 
         });
 
-        $form->setTitle("test");
+        $form->setTitle(TextFormat::RED . TextFormat::BOLD . "Navi Menu");
 
-        // Add a label and step slider instead of a button
-        $form->addButton("Survival");
+        $form->addButton(TextFormat::BOLD . TextFormat::BLUE . "Survival Mode");
+        $form->addButton(TextFormat::BOLD . TextFormat::YELLOW . "Skyblock");
 
         $player->sendForm($form);
     }

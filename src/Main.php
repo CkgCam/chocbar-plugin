@@ -7,6 +7,7 @@ namespace ckgcam\chocbar;
 use ckgcam\chocbar\EventListener;
 use ckgcam\chocbar\npc\npc_survival;
 use ckgcam\chocbar\npc\CustomNPC;
+use ckgcam\chocbar\transfer\Transfer;
 use pocketmine\plugin\PluginBase;
 use pocketmine\player\Player;
 use pocketmine\command\Command;
@@ -33,6 +34,7 @@ class Main extends PluginBase {
     private FormsManager $formsManager;
     private BossBarManager $bossBarManager;
     private WorldManager $worldManager;
+    private Transfer $transfer;
     private ?NpcSystem $npcSystem = null;
     private ?Survival $survival = null;
     private ?Hub $hub = null;
@@ -61,6 +63,7 @@ class Main extends PluginBase {
         $this->formsManager = new FormsManager($this);
         $this->bossBarManager = new BossBarManager($this);
         $this->worldManager = new WorldManager($this);
+        $this->transfer =  new Transfer($this);
         $this->npcSystem = new NpcSystem($this);
 
         // Load specific game mode logic
@@ -95,6 +98,7 @@ class Main extends PluginBase {
             "BossBarManager" => $this->bossBarManager,
             "HotbarMenuManager" => $this->hotbarManager,
             "FormsManager" => $this->formsManager,
+            "Transfer" => $this->transfer,
             default => null,
         };
     }
