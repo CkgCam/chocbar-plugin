@@ -77,14 +77,14 @@ class FormsManager {
         $this->logger("Base64 preview: " . substr($base64, 0, 60));
 
 
-        $form->addButton("Survival Mode", 1, $base64);
-        $form->addButton("Skyblock",1, $base64);
+        $form->addButton("Survival Mode", 1, "https://raw.githubusercontent.com/CkgCam/formicontest/refs/heads/main/default.png");
+        $form->addButton("Skyblock",1, "https://raw.githubusercontent.com/CkgCam/formicontest/refs/heads/main/default.png");
 
 
 
         $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function() use($player, $form): void {
             $player->sendForm($form);
-        }), 1); // Delay by 1 tick
+        }), 5); // Delay by 5 ticks maby fix this bs icon loading
     }
 
     public function AdminMenu(Player $player): void
