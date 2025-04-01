@@ -63,6 +63,8 @@ class FormsManager {
 
         $form->setTitle(TextFormat::RED . TextFormat::BOLD . "Navi Menu blaaaa");
 
+
+        //all the below is quite usless becuse we
         $iconPath = $this->plugin->getDataFolder() . "forms/icons/default.png";
 
         if (!file_exists($iconPath)) {
@@ -77,14 +79,14 @@ class FormsManager {
         $this->logger("Base64 preview: " . substr($base64, 0, 60));
 
 
-        $form->addButton("Survival Mode", 1, "https://raw.githubusercontent.com/CkgCam/formicontest/refs/heads/main/default.png");
+        $form->addButton(TextFormat::BOLD.TextFormat::DARK_RED."Survival Mode ".TextFormat::RESET . "0 Players", 1, "https://raw.githubusercontent.com/CkgCam/formicontest/refs/heads/main/default.png");
         $form->addButton("Skyblock",1, "https://raw.githubusercontent.com/CkgCam/formicontest/refs/heads/main/default.png");
 
 
-
+        //Prob dont need this now but ill keep for now
         $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function() use($player, $form): void {
             $player->sendForm($form);
-        }), 5); // Delay by 5 ticks maby fix this bs icon loading
+        }), 1); // Delay by 5 ticks maby fix this bs icon loading
     }
 
     public function AdminMenu(Player $player): void
