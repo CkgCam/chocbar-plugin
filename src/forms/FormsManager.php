@@ -6,6 +6,7 @@ namespace ckgcam\chocbar\forms;
 
 use ckgcam\chocbar\transfer\Transfer;
 use pocketmine\player\Player;
+use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\TextFormat;
 use ckgcam\chocbar\Main;
 use jojoe77777\FormAPI\SimpleForm;
@@ -76,10 +77,14 @@ class FormsManager {
         $this->logger("Base64 preview: " . substr($base64, 0, 60));
 
 
-        $form->addButton(TextFormat::BOLD . TextFormat::BLUE . "Survival Mode", 1, $base64);
-        $form->addButton(TextFormat::BOLD . TextFormat::YELLOW . "Skyblock");
+        $form->addButton("Survival Mode", 1, $base64);
+        $form->addButton("Skyblock",1, $base64);
 
-        $player->sendForm($form);
+
+
+        $this->plugin->getScheduler()->scheduleDelayedTask(new ClosureTask(function() use($player, $form): void {
+            $player->sendForm($form);
+        }), 1); // Delay by 1 tick
     }
 
     public function AdminMenu(Player $player): void
