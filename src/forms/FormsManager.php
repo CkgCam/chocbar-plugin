@@ -66,11 +66,14 @@ class FormsManager {
 
         if (!file_exists($iconPath)) {
             $this->logger("Icon not found at: $iconPath");
+            $size = filesize($iconPath);
+            $this->$this->logger("Icon file size: {$size} bytes");
         } else {
             $this->logger("Icon loaded from: $iconPath");
         }
 
         $base64 = "data:image/png;base64," . base64_encode(file_get_contents($iconPath));
+        $this->logger("Base64 preview: " . substr($base64, 0, 60));
 
 
         $form->addButton(TextFormat::BOLD . TextFormat::BLUE . "Survival Mode", 1, $base64);
