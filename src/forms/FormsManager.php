@@ -63,7 +63,15 @@ class FormsManager {
         $form->setTitle(TextFormat::RED . TextFormat::BOLD . "Navi Menu");
 
         $iconPath = $this->plugin->getDataFolder() . "forms/icons/default.png";
+
+        if (!file_exists($iconPath)) {
+            $this->logger("Icon not found at: $iconPath");
+        } else {
+            $this->logger("Icon loaded from: $iconPath");
+        }
+
         $base64 = "data:image/png;base64," . base64_encode(file_get_contents($iconPath));
+
 
         $form->addButton(TextFormat::BOLD . TextFormat::BLUE . "Survival Mode", 1, $base64);
         $form->addButton(TextFormat::BOLD . TextFormat::YELLOW . "Skyblock");
