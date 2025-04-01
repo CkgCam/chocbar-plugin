@@ -60,7 +60,7 @@ class FormsManager {
 
         });
 
-        $form->setTitle(TextFormat::RED . TextFormat::BOLD . "Navi Menu");
+        $form->setTitle(TextFormat::RED . TextFormat::BOLD . "Navi Menu blaaaa");
 
         $iconPath = $this->plugin->getDataFolder() . "forms/icons/default.png";
 
