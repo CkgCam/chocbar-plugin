@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ckgcam\chocbar\forms;
 
 use ckgcam\chocbar\transfer\Transfer;
+use jojoe77777\FormAPI\ModalForm;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use ckgcam\chocbar\Main;
@@ -43,7 +44,7 @@ class FormsManager {
     }
     public function openNaviForm(Player $player): void
     {
-        $form = new SimpleForm(function (Player $player, ?int $data)
+        $form = new ModalForm(function (Player $player, ?int $data)
         {
             if ($data === null) return; // Player closed the form
             switch ($data) {
