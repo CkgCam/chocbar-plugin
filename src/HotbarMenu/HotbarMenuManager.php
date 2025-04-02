@@ -126,33 +126,13 @@ class HotbarMenuManager
                 return;
             }
 
-            $this->CallFuncForItem($player, $slotData["call_id"] ?? "failed");
+            $this->plugin->onInteract($player, $slotData["id"] ?? null);
 
             $event->cancel();
             $this->log("Use event for {$player->getName()} has been canceled and action run.");
         }
     }
 
-
-    public function CallFuncForItem(Player $player, String $id): void
-    {
-        switch ($id) {
-            case "openNavi":
-                $player->sendMessage(TextFormat::GREEN . "Navi open");
-                $this->formsManager->openNaviForm($player);
-                break;
-            case "openBook":
-                $player->sendMessage(TextFormat::GREEN . "Book open");
-                break;
-            case "openShop":
-                    $player->sendMessage(TextFormat::GREEN . "Shop open");
-                break;
-                default:
-                    $player->sendMessage(TextFormat::RED . "Unknown id");
-                    break;
-
-        }
-    }
     /**
      * Resolves a VanillaItems method from a string like "compass" or "iron_axe"
      */

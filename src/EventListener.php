@@ -77,7 +77,7 @@ class EventListener implements Listener {
         $this->Logger( "Player quit: " . $player->getName());
     }
 
-    public function onNpcTap(EntityDamageByEntityEvent $event): void {
+    public function onEntityDamageByEntityEvent(EntityDamageByEntityEvent $event): void {
         $this->Logger("EntityDamageByEntityEvent fired");
 
         $damager = $event->getDamager();
@@ -86,21 +86,12 @@ class EventListener implements Listener {
         $this->Logger("Damager NameTag: {$damager->getNameTag()} | Entity NameTag: {$entity->getNameTag()}");
         $this->Logger("Entity class: " . get_class($entity));
 
-        if (!$damager instanceof Player) {
-            $this->Logger("Damager is NOT a Player");
-            return;
-        }
-
-        if ($entity instanceof HumanNPC)
-        {
-        $npcId = $entity->getNpcId();
-        $event->cancel();
-        $this->Logger("Player Tapped Npc With ID: " . $npcId . " Cancelled Dmage Event On NPC");
-        $this->plugin->onNpcTapped($damager, $npcId);
-        }
-        else
-        {
-            $this->Logger("Not An NPC");
+        //if the player tapped an npc
+        if ($damager instanceof Player && $entity instanceof HumanNPC) {
+            $npcId = $entity->getNpcId();
+            $event->cancel();
+            $this->Logger("Player Tapped Npc With ID: " . $npcId . " Cancelled Dmage Event On NPC");
+            $this->plugin->onInteract($damager, $npcId ?? null);
         }
     }
 

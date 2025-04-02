@@ -52,11 +52,6 @@ class Main extends PluginBase {
         $this->saveResource("skins/test.png");
         $this->servertype = strtolower($this->getConfig()->get("server-type", "hub"));
 
-        $icons = ["default.png"];
-        foreach ($icons as $icon) {
-            $this->saveResource("forms/icons/" . $icon);
-        }
-
         // Register core event listener
         $this->eventListener = new EventListener($this);
         $this->getServer()->getPluginManager()->registerEvents($this->eventListener, $this);
@@ -70,24 +65,29 @@ class Main extends PluginBase {
         $this->worldManager = new WorldManager($this);
         $this->transfer =  new Transfer($this);
         $this->npcSystem = new NpcSystem($this);
-
-        // Load specific game mode logic
-        if ($this->servertype === "survival") {
-            $this->survival = new Survival($this);
-            $this->survival->setBossBarManager($this->bossBarManager);
-            $this->survival->enable();
-            $this->blockTickingDisabled = false;
-        } elseif ($this->servertype === "hub") {
-            $this->hub = new Hub($this);
-            $this->hub->enable();
-            $this->blockTickingDisabled = true;
-        }
+        $this->InitalizeServerSpeficManagers();
 
         $this->eventListener->enable();
         $this->formsManager->enable();
         $this->hotbarManager->enable();
 
         $this->Logger("chocbar lib loaded!");
+    }
+
+    private function InitalizeServerSpeficManagers(): void {
+        switch ($this->servertype) {
+            case "hub":
+                $this->hub = new Hub($this);
+                $this->hub->enable();
+                break;
+            case "survival":
+                $this->survival = new Survival($this);
+                $this->survival->enable();
+                break;
+            default:
+                $this->Logger("Unknown server type");
+
+        }
     }
 
     public function onDisable(): void {
@@ -125,44 +125,25 @@ class Main extends PluginBase {
         }
 
         return match ($cmd->getName()) {
-            "tpworld" => $this->worldManager->handleCommand($sender, $cmd, $label, $args),
+            //"tpworld" => $this->worldManager->handleCommand($sender, $cmd, $label, $args),
             //"admin" => $this->formsManager->AdminMenu($sender),
             //"menu" => $this->openGameModeMenu($sender),
             default => false,
         };
     }
 
-    public function onNpcTapped(Player $player, string $npcId): void {
-        $this->Logger("Received NPC Tap");
-
-        switch ($npcId) {
+    public function onInteract(Player $player, mixed $id): void
+    {
+        $this->Logger("New OnInteractc Event With ID: ".$id);
+        switch ($id) {
             case "survival":
                 $this->Logger("Opening Survival Join Form...");
                 break;
-                    default:
-                        $this->Logger("This NPC Tap Is Not Binded");
+                case "openNavi":
+                    $this->formsManager->openNaviForm($player);
+                    break;
+            default:
+                $this->Logger("This Interaction event (".$id.") does not exist.");
         }
-
-    }
-
-
-    public function openGameModeMenu(Player $player): void {
-        if ($this->servertype === "survival") {
-            $this->formsManager->survivalmenu($player);
-        }
-    }
-
-    public function executeHotbarActions(Player $player, string $ID): void {
-        if ($ID === "openNaviForm") {
-            $this->formsManager->openNaviForm($player);
-        }
-    }
-
-    public function DetachHud(Player $player): void {
-        $this->hotbarManager->DetachHud($player);
-    }
-
-    public function onNaviFormClosed(Player $player, ?array $data): void {
-        // Add your custom form response logic here
     }
 }
