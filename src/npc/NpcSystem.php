@@ -51,7 +51,6 @@ class NpcSystem {
         $this->Logger("Instantiating NPC...");
         $npc = new NPC($location, $skin);
         $npc->setNpcId($npcId);
-        $npc->enableParticles(true);
 
         $npc->setNameTag($nametag);
         $npc->setNameTagVisible(true);
@@ -59,6 +58,7 @@ class NpcSystem {
 
         $this->Logger("Spawning NPC to player...");
         $npc->spawnTo($player);
+        $npc->enableParticles(true);
 
         $this->Logger("Tracking NPC '$npcId' for $name");
         $this->spawnedNpcs[$name][$npcId] = $npc;
