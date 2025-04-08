@@ -28,21 +28,42 @@ class SkinLoader {
             $this->plugin->saveResource("geo/{$name}.json");
         }
 
-        // Final existence check
         if (!file_exists($skinPath) || !file_exists($geoPath)) {
             $this->plugin->getLogger()->warning(TextFormat::RED . "[SkinLoader] Missing files for skin: {$name}");
             return null;
         }
 
-        $skinData = file_get_contents($skinPath);
         $geoData = file_get_contents($geoPath);
 
-        return new Skin(
-            $name,
-            $skinData,
-            "",
-            "geometry.{$name}",
-            $geoData
-        );
+        $skinData = $this->convertSkinImageToBytes($skinPath);
+        if (!in_array(strlen($skinData), [8192, 16384, 65536])) {
+            $this->plugin->getLogger()->warning(TextFormat::RED . "[SkinLoader] Invalid skin size " . strlen($skinData) . " for {$name}, using fallback 64x64 blank");
+            $skinData = str_repeat("\x00", 8192);
+        }
+
+        return new Skin($name, $skinData, "", "geometry.{$name}", $geoData);
+    }
+
+    private function convertSkinImageToBytes(string $path): string {
+        $image = @imagecreatefrompng($path);
+        if (!$image) return "";
+
+        $width = imagesx($image);
+        $height = imagesy($image);
+        $bytes = "";
+
+        for ($y = 0; $y < $height; ++$y) {
+            for ($x = 0; $x < $width; ++$x) {
+                $color = imagecolorat($image, $x, $y);
+                $a = 127 - (($color >> 24) & 0x7F);
+                $r = ($color >> 16) & 0xFF;
+                $g = ($color >> 8) & 0xFF;
+                $b = $color & 0xFF;
+                $bytes .= chr($r) . chr($g) . chr($b) . chr($a);
+            }
+        }
+
+        imagedestroy($image);
+        return $bytes;
     }
 }
