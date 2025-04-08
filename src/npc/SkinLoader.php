@@ -41,7 +41,7 @@ class SkinLoader {
             $skinData = str_repeat("\x00", 8192);
         }
 
-        return new Skin($name, $skinData, "", "geometry.{$name}", $geoData);
+        return new Skin($name, $skinData, "", "geometry.{$name}", json_encode(["minecraft:geometry" => [json_decode($geoData, true)["geometry.{$name}"]]]));
     }
 
     private function convertSkinImageToBytes(string $path): string {
