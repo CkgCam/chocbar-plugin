@@ -35,6 +35,8 @@ class SkinLoader {
 
         $geoData = file_get_contents($geoPath);
 
+        $this->plugin->getLogger()->info("[SkinLoader] Loading skin image: $skinPath");
+
         $skinData = $this->convertSkinImageToBytes($skinPath);
         if (!in_array(strlen($skinData), [8192, 16384, 32768, 65536])) {
             $this->plugin->getLogger()->warning(TextFormat::RED . "[SkinLoader] Invalid skin size " . strlen($skinData) . " for {$name}, using fallback 64x64 blank");
