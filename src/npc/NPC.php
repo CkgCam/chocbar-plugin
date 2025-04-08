@@ -8,6 +8,7 @@ use pocketmine\entity\Human;
 use pocketmine\entity\EntitySizeInfo;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
+use ckgcam\chocbar\particles\SphereEmitter;
 
 use pocketmine\world\particle\FlameParticle;
 
@@ -15,12 +16,15 @@ class NPC extends Human {
     private string $npcId;
     private bool $showParticles = false;
 
+    private SphereEmitter $emitter;
+
     public function setNpcId(string $id): void {
         $this->npcId = $id;
     }
 
     public function enableParticles(bool $value = true): void {
         $this->showParticles = $value;
+        $emitter = new SphereEmitter();
     }
 
     public function getNpcId(): string {
@@ -40,7 +44,7 @@ class NPC extends Human {
 
     public function onUpdate(int $currentTick): bool {
         if ($this->showParticles && $currentTick % 10 === 0) {
-            $this->location->getWorld()->addParticle($this->location->add(0, 1, 0), new FlameParticle());
+            $this->emitter->emit($this->location, $this->getWorld());
         }
 
         $this->setMotion(Vector3::zero());
