@@ -9,12 +9,18 @@ use pocketmine\entity\EntitySizeInfo;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
 
-class NPC extends Human {
+use pocketmine\world\particle\FlameParticle;
 
+class NPC extends Human {
     private string $npcId;
+    private bool $showParticles = false;
 
     public function setNpcId(string $id): void {
         $this->npcId = $id;
+    }
+
+    public function enableParticles(bool $value = true): void {
+        $this->showParticles = $value;
     }
 
     public function getNpcId(): string {
@@ -33,6 +39,10 @@ class NPC extends Human {
     }
 
     public function onUpdate(int $currentTick): bool {
+        if ($this->showParticles && $currentTick % 10 === 0) {
+            $this->location->getWorld()->addParticle($this->location->add(0, 1, 0), new FlameParticle());
+        }
+
         $this->setMotion(Vector3::zero());
         $this->teleport($this->location);
         return parent::onUpdate($currentTick);

@@ -87,7 +87,7 @@ class EventListener implements Listener {
         $this->Logger("Entity class: " . get_class($entity));
 
         //if the player tapped an npc
-        if ($damager instanceof Player && $entity instanceof HumanNPC) {
+        if ($damager instanceof Player && $entity instanceof NPC) {
             $npcId = $entity->getNpcId();
             $event->cancel();
             $this->Logger("Player Tapped Npc With ID: " . $npcId . " Cancelled Dmage Event On NPC");

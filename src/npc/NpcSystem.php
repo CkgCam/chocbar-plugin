@@ -51,6 +51,7 @@ class NpcSystem {
         $this->Logger("Instantiating NPC...");
         $npc = new NPC($location, $skin);
         $npc->setNpcId($npcId);
+        $npc->enableParticles(true);
 
         $npc->setNameTag($nametag);
         $npc->setNameTagVisible(true);
