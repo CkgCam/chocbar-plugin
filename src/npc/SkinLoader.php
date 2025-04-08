@@ -18,14 +18,14 @@ class SkinLoader {
 
     public function load(string $name): ?Skin {
         $skinPath = $this->plugin->getDataFolder() . "skins/{$name}.png";
-        $geoPath = $this->plugin->getDataFolder() . "geo/{$name}.json";
+        $geoPath = $this->plugin->getDataFolder() . "geo/{$name}.geo.json";
 
         // Auto-extract if missing
         if (!file_exists($skinPath)) {
             $this->plugin->saveResource("skins/{$name}.png");
         }
         if (!file_exists($geoPath)) {
-            $this->plugin->saveResource("geo/{$name}.json");
+            $this->plugin->saveResource("geo/{$name}.geo.json");
         }
 
         if (!file_exists($skinPath) || !file_exists($geoPath)) {
