@@ -43,8 +43,9 @@ class NPC extends Human {
     }
 
     public function onUpdate(int $currentTick): bool {
-        if ($this->showParticles && $currentTick % 10 === 0) {
-            $this->emitter->emit($this->location, $this->getWorld());
+        if ($this->showParticles && $this->emitter !== null && $currentTick % 10 === 0) {
+            $offsetLocation = $this->location->add(0, 0.5, 0);
+            $this->emitter->emit($offsetLocation, $this->getWorld());
         }
 
         $this->setMotion(Vector3::zero());
