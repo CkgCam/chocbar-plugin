@@ -9,6 +9,7 @@ use pocketmine\world\particle\Particle;
 use pocketmine\world\particle\DustParticle;
 use pocketmine\world\World;
 use pocketmine\math\AxisAlignedBB;
+use pocketmine\color\Color;
 
 class SphereEmitter {
 
@@ -19,7 +20,7 @@ class SphereEmitter {
     public function __construct(float $radius = 1.5, int $points = 100, ?Particle $particle = null) {
         $this->radius = $radius;
         $this->points = $points;
-        $this->particle = $particle ?? new DustParticle(255, 0, 0); // default red dust
+        $this->particle = $particle ?? new DustParticle(new Color(255, 0, 0));; // default red dust
     }
 
     public function emit(Vector3 $center, World $world): void {
