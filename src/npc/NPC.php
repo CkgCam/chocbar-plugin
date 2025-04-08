@@ -24,7 +24,7 @@ class NPC extends Human {
 
     public function enableParticles(bool $value = true): void {
         $this->showParticles = $value;
-        $emitter = new SphereEmitter();
+        $this->emitter = new SphereEmitter();
     }
 
     public function getNpcId(): string {
