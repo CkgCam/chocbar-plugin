@@ -53,7 +53,7 @@ class Main extends PluginBase {
         $this->servertype = strtolower($this->getConfig()->get("server-type", "hub"));
 
         $this->saveResource("skins/survival.png");
-        $this->saveResource("geo/survival.json");
+        $this->saveResource("geo/surviva.geol.json");
 
         // Register core event listener
         $this->eventListener = new EventListener($this);
