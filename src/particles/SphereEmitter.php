@@ -21,7 +21,7 @@ class SphereEmitter {
     private int $points;
     private Particle $particle;
 
-    public function __construct(float $radius = 1.5, int $points = 100, ?Particle $particle = null) {
+    public function __construct(float $radius = 1.5, int $points = 10, ?Particle $particle = null) {
         $this->radius = $radius;
         $this->points = $points;
         $this->particle = $particle ?? new FlameParticle();
