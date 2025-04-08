@@ -29,7 +29,7 @@ class SkinLoader {
         $skinData = $this->convertSkinImageToBytes($skinPath);
         if (!in_array(strlen($skinData), [8192, 16384, 32768, 65536])) {
             $this->plugin->getLogger()->warning(TextFormat::RED . "[SkinLoader] Invalid skin size " . strlen($skinData) . " for {$name}, using fallback 64x64 blank");
-            $skinData = str_repeat("\x00", 8192);
+            $skinData = $this->generateRedFallbackSkin();
         }
 
         return new Skin($name, $skinData);
@@ -57,4 +57,17 @@ class SkinLoader {
         imagedestroy($image);
         return $bytes;
     }
+
+    private function generateRedFallbackSkin(int $size = 64): string {
+        $bytes = "";
+        for ($i = 0; $i < $size * $size; ++$i) {
+            $r = 255;
+            $g = 0;
+            $b = 0;
+            $a = 255; // fully opaque
+            $bytes .= chr($r) . chr($g) . chr($b) . chr($a);
+        }
+        return $bytes;
+    }
+
 }
