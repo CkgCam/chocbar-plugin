@@ -18,22 +18,11 @@ class SkinLoader {
 
     public function load(string $name): ?Skin {
         $skinPath = $this->plugin->getDataFolder() . "skins/{$name}.png";
-        $geoPath = $this->plugin->getDataFolder() . "geo/{$name}.geo.json";
 
         // Auto-extract if missing
         if (!file_exists($skinPath)) {
             $this->plugin->saveResource("skins/{$name}.png");
         }
-        if (!file_exists($geoPath)) {
-            $this->plugin->saveResource("geo/{$name}.geo.json");
-        }
-
-        if (!file_exists($skinPath) || !file_exists($geoPath)) {
-            $this->plugin->getLogger()->warning(TextFormat::RED . "[SkinLoader] Missing files for skin: {$name}");
-            return null;
-        }
-
-        $geoData = file_get_contents($geoPath);
 
         $this->plugin->getLogger()->info("[SkinLoader] Loading skin image: $skinPath");
 
@@ -43,7 +32,7 @@ class SkinLoader {
             $skinData = str_repeat("\x00", 8192);
         }
 
-        return new Skin($name, $skinData, "", "geometry.{$name}", json_encode(["minecraft:geometry" => [json_decode($geoData, true)["geometry.{$name}"]]]));
+        return new Skin($name, $skinData);
     }
 
     private function convertSkinImageToBytes(string $path): string {
