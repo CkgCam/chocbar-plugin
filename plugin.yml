@@ -3,7 +3,9 @@ name: chocbar
 version: 0.0.1
 main: ckgcam\chocbar\Main
 api: 5.25.2
-depend: [FormAPI]
+depend:
+  - FormAPI
+  - libasynql
 softdepend:
   - FormImagesFix
 src-namespace-prefix: ckgcam\chocbar
