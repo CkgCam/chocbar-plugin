@@ -28,7 +28,11 @@ use pocketmine\entity\EntityFactory;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\world\World;
 
-class Main extends PluginBase {
+use poggit\libasynql\DataConnector;
+use poggit\libasynql\libasynql;
+
+class Main extends PluginBase
+{
 
     private EventListener $eventListener;
     private HotbarMenuManager $hotbarManager;
@@ -44,13 +48,16 @@ class Main extends PluginBase {
     private string $servertype;
     private bool $blockTickingDisabled = false;
 
-    private function Logger(String $message): void
+    private DataConnector $db;
+
+    private function Logger(string $message): void
     {
-        $this->getLogger()->info(TextFormat::DARK_PURPLE."[Main]" . TextFormat::GREEN . " > " . TextFormat::WHITE . "[" . $message . "]");
+        $this->getLogger()->info(TextFormat::DARK_PURPLE . "[Main]" . TextFormat::GREEN . " > " . TextFormat::WHITE . "[" . $message . "]");
     }
 
 
-    public function onEnable(): void {
+    public function onEnable(): void
+    {
         $this->saveDefaultConfig();
         $this->saveResource("skins/test.png");
         $this->servertype = strtolower($this->getConfig()->get("server-type", "hub"));
@@ -69,7 +76,7 @@ class Main extends PluginBase {
         $this->formsManager = new FormsManager($this);
         $this->bossBarManager = new BossBarManager($this);
         $this->worldManager = new WorldManager($this);
-        $this->transfer =  new Transfer($this);
+        $this->transfer = new Transfer($this);
         $this->npcSystem = new NpcSystem($this);
         $this->screenTextManager = new ScreenTextManager($this);
         $this->InitalizeServerSpeficManagers();
@@ -79,7 +86,28 @@ class Main extends PluginBase {
         $this->hotbarManager->enable();
 
         $this->Logger("chocbar lib loaded!");
+
+            $this->saveResource("mysql.sql");
+            $config = [
+                "type" => "mysql",
+                "host" => "192.168.1.70",
+                "user" => "your_user",
+                "password" => "your_pass",
+                "database" => "your_db",
+                "port" => 3306
+            ];
+            $this->db = libasynql::create($this, $config, [
+                "mysql" => "mysql.sql"
+            ]);
+            $this->db->executeGeneric("init");
+        }
+
+    public function getDb(): DataConnector
+    {
+        return $this->db;
     }
+
+
 
     private function InitalizeServerSpeficManagers(): void {
         switch ($this->servertype) {
