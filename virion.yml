@@ -1,7 +1,0 @@
-﻿name: chocbar
-author: CkgCam
-version: 0.0.1
-main: ckgcam\chocbar\Main
-api: 5.25.2
-depend:
-  - libasynql

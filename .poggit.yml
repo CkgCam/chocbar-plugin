@@ -1,5 +1,3 @@
---- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/CkgCam/chocbar-plugin
-build-by-default: true
 branches:
   - main
 projects:
