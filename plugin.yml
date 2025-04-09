@@ -5,6 +5,8 @@ main: ckgcam\chocbar\Main
 api: 5.25.2
 depend:
   - FormAPI
+  - libasynql
+
 softdepend:
   - FormImagesFix
 src-namespace-prefix: ckgcam\chocbar
