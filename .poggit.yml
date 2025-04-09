@@ -5,4 +5,5 @@ projects:
     path: ""
     type: plugin
     libs:
-      - libasynql
+      - src: poggit/libasynql
+        version: ^3.0.0
