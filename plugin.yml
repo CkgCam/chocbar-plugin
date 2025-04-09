@@ -11,7 +11,7 @@ softdepend:
 src-namespace-prefix: ckgcam\chocbar
 commands:
   tpworld:
-    description: "Teleport between worlds"
+    description: "Teleport betwseen worlds"
     usage: "/tpworld <worldname>"
     permission: chocbar.tpworld
   admin:
