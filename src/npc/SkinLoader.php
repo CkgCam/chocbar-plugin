@@ -10,6 +10,10 @@ use ckgcam\chocbar\Main;
 
 class SkinLoader {
 
+    //On First load skin should be reloaded from the res folder
+    /** @var array<string, bool> */
+    private array $reloadedSkins = [];
+
     private Main $plugin;
 
     public function __construct(Main $plugin) {
@@ -20,9 +24,12 @@ class SkinLoader {
         $skinPath = $this->plugin->getDataFolder() . "skins/{$name}.png";
 
         // Auto-extract if missing
-        if (!file_exists($skinPath)) {
-            $this->plugin->saveResource("skins/{$name}.png");
+        if (!file_exists($skinPath) || !isset($this->reloadedSkins[$name])) {
+            $this->plugin->saveResource("skins/{$name}.png", true); // force overwrite
+            $this->reloadedSkins[$name] = true;
         }
+
+
 
         $this->plugin->getLogger()->info("[SkinLoader] Loading skin image: $skinPath");
 

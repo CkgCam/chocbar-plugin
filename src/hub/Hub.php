@@ -65,6 +65,7 @@ class Hub {
 
             if ($this->npcSystem !== null) {
                 $this->npcSystem->spawnHubNPC($player, $world, new Vector3(0.52, 30, -37.44), "Survival Mode", "survival");
+                $this->npcSystem->spawnHubNPC($player, $world, new Vector3(5.5, 30, -36.5), "Prison", "prison");
                 $this->npcSystem->spawnHubNPC($player, $world, new Vector3(5.5, 30, -36.5), "Sky Block", "skyblock");
             }
         } else {
