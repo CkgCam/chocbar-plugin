@@ -59,9 +59,6 @@ class Main extends PluginBase
 
     public function onEnable(): void
     {
-        if (!class_exists(\poggit\libasynql\DataConnector::class)) {
-            throw new \RuntimeException("libasynql not bundled!");
-        }
 
         $this->saveDefaultConfig();
         $this->saveResource("skins/test.png");
