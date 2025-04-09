@@ -7,6 +7,7 @@ namespace ckgcam\chocbar\screentext;
 use ckgcam\chocbar\Main;
 use pocketmine\world\sound\Sound;
 use pocketmine\world\sound\BellRingSound;
+use pocketmine\player\Player;
 
 class ScreenTextManager {
 
