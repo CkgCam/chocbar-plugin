@@ -6,6 +6,7 @@ namespace ckgcam\chocbar\hub;
 
 use ckgcam\chocbar\bossbar\BossBarManager;
 use ckgcam\chocbar\Main;
+use ckgcam\chocbar\screentext\ScreenTextManager;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use pocketmine\scheduler\ClosureTask;
@@ -22,6 +23,8 @@ class Hub {
     private ?NpcSystem $npcSystem = null;
     private ?HotbarMenuManager $hotbarMenuManager = null;
 
+    private ?ScreenTextManager $screenTextManager = null;
+
     public function __construct(Main $plugin) {
         $this->plugin = $plugin;
     }
@@ -34,6 +37,7 @@ class Hub {
         $this->npcSystem = $this->plugin->getScript("NpcSystem");
         $this->bossBarManager = $this->plugin->getScript("BossBarManager");
         $this->hotbarMenuManager = $this->plugin->getScript("HotbarMenuManager");
+        $this->screenTextManager = $this->plugin->getScript("ScreenTextManager");
 
         $this->plugin->getScheduler()->scheduleRepeatingTask(new ClosureTask(function (): void {
             foreach ($this->plugin->getServer()->getWorldManager()->getWorlds() as $world) {
@@ -53,6 +57,10 @@ class Hub {
 
             if ($this->bossBarManager !== null) {
                 $this->bossBarManager->showBossBar($player, "§bChocbar Hub | §7/menu for more");
+            }
+
+            if($this->screenTextManager !== null) {
+                $this->screenTextManager->send($player,"Welcome to Chocbar!","Enjoy Your Stay", 0 , 20, 12, null);
             }
 
             if ($this->npcSystem !== null) {

@@ -7,6 +7,7 @@ namespace ckgcam\chocbar;
 use ckgcam\chocbar\EventListener;
 use ckgcam\chocbar\npc\npc_survival;
 use ckgcam\chocbar\npc\CustomNPC;
+use ckgcam\chocbar\screentext\ScreenTextManager;
 use ckgcam\chocbar\transfer\Transfer;
 use pocketmine\plugin\PluginBase;
 use pocketmine\player\Player;
@@ -38,6 +39,8 @@ class Main extends PluginBase {
     private ?NpcSystem $npcSystem = null;
     private ?Survival $survival = null;
     private ?Hub $hub = null;
+
+    private ScreenTextManager $screenTextManager;
     private string $servertype;
     private bool $blockTickingDisabled = false;
 
@@ -68,6 +71,7 @@ class Main extends PluginBase {
         $this->worldManager = new WorldManager($this);
         $this->transfer =  new Transfer($this);
         $this->npcSystem = new NpcSystem($this);
+        $this->screenTextManager = new ScreenTextManager($this);
         $this->InitalizeServerSpeficManagers();
 
         $this->eventListener->enable();
@@ -107,6 +111,7 @@ class Main extends PluginBase {
             "HotbarMenuManager" => $this->hotbarManager,
             "FormsManager" => $this->formsManager,
             "Transfer" => $this->transfer,
+            "ScreenTextManager" => $this->screenTextManager,
             default => null,
         };
     }
